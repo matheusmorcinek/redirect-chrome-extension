@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "Redirect Network Chrome Extension",
+  "version": "0.001",
+  "content_scripts": [{ "matches": ["<all_urls>"], "js": ["content.js"] }],
+  "action": {},
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": [
+    "webRequest",
+    "webRequestBlocking",
+    "*://*/*",
+    "webNavigation",
+    "browserAction",
+    "activeTab",
+    "contextMenus",
+    "storage"
+  ]
+}
+
+// https://developer.chrome.com/docs/extensions/mv3/manifest/
+
+// { "matches": [
+//     "http://algumsite.net/*",
+//     "https://algumsite.net/*"
+// ]
+
+
+
+// permissions https://developer.chrome.com/docs/extensions/mv3/permission_warnings/
+
+
+
+
+// intercept requests https://stackoverflow.com/questions/30590428/chrome-extension-how-to-intercept-requested-urls
+// https://gilfink.medium.com/adding-web-interception-abilities-to-your-chrome-extension-fb42366df425
