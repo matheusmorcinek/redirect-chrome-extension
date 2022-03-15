@@ -1,0 +1,11 @@
+[
+  {
+    "id": 4,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": { "url": "http://localhost:3000/faviconRedirected.ico" }
+    },
+    "condition": { "urlFilter": "http://localhost:3000/favicon.ico", "resourceTypes": ["image"] }
+  }
+]
