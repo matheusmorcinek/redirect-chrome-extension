@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Button from '../styled-mui-components/Button';
 import { hello, saveRule } from '../../main';
 import styles from './Rules.module.css';
@@ -6,67 +6,11 @@ import DvrIcon from '@mui/icons-material/Dvr';
 import Condition from '../Condition/Condition';
 import RulesTable from '../styled-mui-components/RulesTable/RulesTable';
 import ExtensionContext from '../../context/extensionContext';
-
-export const searchType = Object.freeze({
-    EQUALS: 'Equals',
-    CONTAINS: 'Contains',
-    REGEX: 'Matches (RegEx)'
-});
-
-const rules = [{
-    id: 1647457428206,
-    name: 'project 1',
-    description: 'mfe dev environment',
-    active: true,
-    conditions: [
-        {
-            id: 1,
-            request: {
-                value: '',
-                search: searchType.REGEX
-            }
-        }
-    ]
-}];
-
-// new Date().getTime();
+import { searchType } from '../../constants/search.js';
 
 const Rules = () => {
 
-    
-
-    const [rules, setRules] = React.useState([{
-        id: 1647457428206,
-        name: 'project 1',
-        description: 'mfe dev environment',
-        active: true,
-        conditions: [
-            {
-                id: 1,
-                request: {
-                    value: 'google.com',
-                    search: searchType.EQUALS,
-                    redirect: 'something.com'
-                }
-            }
-        ]
-    }, {
-        id: 1647457428206,
-        name: 'project 2',
-        description: 'mfe stage environment',
-        active: false,
-        conditions: [
-            {
-                id: 1,
-                request: {
-                    value: 'facebook.com',
-                    search: searchType.REGEX,
-                    redirect: 'example.com'
-                }
-            }
-        ]
-    }]);
-
+    const { rules } = useContext(ExtensionContext);
 
     return (
         <div className={styles['rules-container']}>
