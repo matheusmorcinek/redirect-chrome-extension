@@ -4,7 +4,7 @@
   "version": "0.001",
   "content_scripts": [{ "matches": ["<all_urls>"], "js": ["content.js"] }],
   "action": {
-    "default_popup": "/popup/index.html"
+    "default_popup": "popup-extension/build/index.html"
   },
   "background": {
     "service_worker": "background.js"
@@ -28,6 +28,8 @@
     "storage"
   ]
 }
+//   "content_scripts": [{ "matches": ["<all_urls>"], "js": ["content.js"] }],
+// https://developer.chrome.com/docs/extensions/mv3/manifest/
 
 
 //chrome extension structure https://javascript.plainenglish.io/creating-a-chrome-extension-with-react-d92db20550cb

@@ -33,8 +33,26 @@ chrome.storage.sync.get(/* String or Array */["yourBody"], function(items){
     console.log('the items ', items)
 });
 
+chrome.storage.sync.get(/* String or Array */["rule"], function(items){
+    //  items = [ { "yourBody": "myBody" } ]
+    console.log('get rule on background, rule: ', items)
+});
 
 
+// setInterval(() => {
+
+//     console.log(' ')
+//     chrome.storage.sync.get(/* String or Array */["rule"], function(items){
+//         //  items = [ { "yourBody": "myBody" } ]
+//         console.log('get rule on background, rule: ', items)
+//     });
+    
+// }, 2000);
+
+// chrome.storage.sync.get(null, function(items) {
+//     var allKeys = Object.keys(items);
+//     console.log(allKeys);
+// });
 
 // chrome.webRequest.onBeforeRequest.addListener(
 //     function (details) {

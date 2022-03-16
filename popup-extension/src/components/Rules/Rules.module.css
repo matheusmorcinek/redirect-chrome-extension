@@ -1,0 +1,29 @@
+.rules-container {
+  display: flex;
+  width: 98%;
+  flex-direction: column;
+  margin: 0.5rem 0;
+}
+
+.rules-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 0.5rem 0;
+}
+
+.rules-inner-container {
+  display: flex;
+  flex-direction: column;
+  height: auto;
+  margin: 0.2em 0;
+  padding: 0 0.5rem;
+  border-radius: 0.5rem;
+  border: solid 1px #fff;
+}
+
+.conditions-container {
+  display: flex;
+  flex-direction: column;
+  margin: 0.2em 0.5em;
+}
