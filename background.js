@@ -22,6 +22,20 @@ const extensionButtonClicked = (tab) => {
 chrome.action.onClicked.addListener(tab => extensionButtonClicked(tab));
 
 
+
+
+chrome.storage.sync.set({ "yourBody": "myBody" }, function(){
+   console.log('yes saved')
+});
+
+chrome.storage.sync.get(/* String or Array */["yourBody"], function(items){
+    //  items = [ { "yourBody": "myBody" } ]
+    console.log('the items ', items)
+});
+
+
+
+
 // chrome.webRequest.onBeforeRequest.addListener(
 //     function (details) {
 //         console.log('details ', details)

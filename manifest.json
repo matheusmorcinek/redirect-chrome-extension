@@ -3,7 +3,9 @@
   "name": "Redirect Network Chrome Extension",
   "version": "0.001",
   "content_scripts": [{ "matches": ["<all_urls>"], "js": ["content.js"] }],
-  "action": {},
+  "action": {
+    "default_popup": "/popup/index.html"
+  },
   "background": {
     "service_worker": "background.js"
   },
@@ -26,6 +28,10 @@
     "storage"
   ]
 }
+
+
+//chrome extension structure https://javascript.plainenglish.io/creating-a-chrome-extension-with-react-d92db20550cb
+
 
 // https://developer.chrome.com/docs/extensions/mv3/manifest/
 

@@ -20,3 +20,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     console.log('message ', message.text)
     sendResponse();
 });
+
+
+
+chrome.storage.sync.get(/* String or Array */["yourBody"], function(items){
+    //  items = [ { "yourBody": "myBody" } ]
+    console.log('the items from the content', items)
+});
