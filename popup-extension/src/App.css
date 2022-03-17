@@ -34,18 +34,6 @@ h4 {
   }
 }
 
-.app-popup-header {
-  display: flex;
-  align-items: center;
-  height: 40px;
-  width: 700px;
-  background: linear-gradient(
-    90deg,
-    rgba(255, 255, 255, 1) 40%,
-    rgba(24, 187, 143, 1) 100%
-  );
-}
-
 .app-popup-header h1 {
   margin: 0;
 }

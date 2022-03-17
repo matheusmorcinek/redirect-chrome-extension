@@ -1,50 +1,93 @@
-import * as React from 'react';
-import { styled } from '@mui/material/styles';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Switch from '@mui/material/Switch';
-import Paper from '@mui/material/Paper';
-import Button from '../../../components/styled-mui-components/Button';
-import RedirectType from '../../RedirectType/RedirectType';
+import React from 'react';
+import { makeStyles } from '@material-ui/styles';
+import { Paper, TableRow, TableHead, TableCell, TableBody, Table, Switch, IconButton } from '@mui/material';
 import useRuleConditionModal from '../../../hooks/useRuleConditionModal';
+import ExpandableTableRow from './ExpandableTableRow/ExpandableTableRow';
+import RedirectType from '../../RedirectType/RedirectType';
+import Button from '../CustomButton/Button';
+import DeleteIcon from '@mui/icons-material/Delete';
 
-// const TableCell = styled(TableCell)(({ theme }) => ({
-//     [`&.${tableCellClasses.head}`]: {
-//         color: theme.palette.common.white,
-//         border: "solid 1px #fff"
-//     },
-//     [`&.${tableCellClasses.body}`]: {
-//         fontSize: 14,
-//     },
-// }));
+const useStyles = makeStyles({
+    root: {
+        width: '100%',
+        overflowX: 'auto'
+    },
+    table: {
+        minWidth: 650
+    }
+});
 
-// const StyledTableRow = styled(TableRow)(({ theme }) => ({
-//     backgroundColor: "#1c2128",
-//     color: "#fff"
-// }));
+function createData(name, calories, fat, carbs, protein, detail) {
+    return { name, calories, fat, carbs, protein, detail };
+}
+
+const rows = [
+    createData(
+        'Frozen yoghurt',
+        159,
+        6.0,
+        24,
+        4.0,
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+    ),
+    createData(
+        'Ice cream sandwich',
+        237,
+        9.0,
+        37,
+        4.3,
+        'Maecenas rutrum urna vel lacus viverra, id ultrices dui rutrum'
+    ),
+    createData(
+        'Eclair',
+        262,
+        16.0,
+        24,
+        6.0,
+        'Morbi congue gravida nunc, eu cursus felis vulputate id'
+    ),
+    createData(
+        'Cupcake',
+        305,
+        3.7,
+        67,
+        4.3,
+        'Vestibulum efficitur, ipsum consectetur finibus maximus, ligula dolor vehicula ex, sed viverra nulla mauris id purus'
+    ),
+    createData(
+        'Gingerbread',
+        356,
+        16.0,
+        49,
+        3.9,
+        ' Suspendisse vehicula eu libero eget viverra'
+    )
+];
 
 const RulesTable = ({ rules }) => {
 
     const { openRuleConditionModal } = useRuleConditionModal();
 
+    const classes = useStyles();
+
     return (
-        <TableContainer component={Paper}>
-            <Table>
+        <Paper className={classes.root}>
+            <Table className={classes.table} aria-label="simple table">
                 <TableHead>
                     <TableRow>
+                        <TableCell padding="checkbox" />
                         <TableCell>Rule details</TableCell>
                         <TableCell align="center">Type</TableCell>
-                        <TableCell align="right">Status</TableCell>
-                        <TableCell align="right">Actions</TableCell>
+                        <TableCell align="center">Status</TableCell>
+                        <TableCell align="center">Actions</TableCell>
                     </TableRow>
                 </TableHead>
                 <TableBody>
                     {rules.map((rule) => (
-                        <TableRow key={rule.id}>
+                        <ExpandableTableRow
+                            key={rule.id}
+                            expandComponent={<TableCell colSpan="5">//CONDITIONS LIST</TableCell>}
+                        >
                             <TableCell component="th" scope="row">
                                 <div>
                                     <h3>{rule.name}</h3>
@@ -56,13 +99,16 @@ const RulesTable = ({ rules }) => {
                                 <Switch checked={rule.active} />
                             </TableCell>
                             <TableCell align="right">
-                                <Button variant="contained" onClick={() => openRuleConditionModal(rule)}>Add Condition</Button>
+                                <Button variant="contained" size="small" onClick={() => openRuleConditionModal(rule)}>Add Condition</Button>
+                                <IconButton color="primary" aria-label="upload picture" component="span">
+                                    <DeleteIcon color='action' />
+                                </IconButton>
                             </TableCell>
-                        </TableRow>
+                        </ExpandableTableRow>
                     ))}
                 </TableBody>
             </Table>
-        </TableContainer>
+        </Paper>
     );
 }
 

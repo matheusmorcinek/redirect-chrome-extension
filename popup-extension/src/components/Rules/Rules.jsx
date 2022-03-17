@@ -1,12 +1,8 @@
 import React, { useContext } from 'react';
-import Button from '../styled-mui-components/Button';
-import { hello, saveRule } from '../../main';
-import styles from './Rules.module.css';
-import DvrIcon from '@mui/icons-material/Dvr';
-import Condition from '../Condition/Condition';
-import RulesTable from '../styled-mui-components/RulesTable/RulesTable';
 import ExtensionContext from '../../context/extensionContext';
-import { searchType } from '../../constants/search.js';
+import Button from '../styled-mui-components/CustomButton/Button';
+import RulesTable from '../styled-mui-components/RulesTable/RulesTable';
+import styles from './Rules.module.css';
 
 const Rules = () => {
 
@@ -15,7 +11,7 @@ const Rules = () => {
     return (
         <div className={styles['rules-container']}>
             <div className={styles['rules-header']}>
-                <h3><DvrIcon /> HTTP Rules</h3>
+                <h3>💻 HTTP Rules</h3>
                 <Button variant="contained" onClick={() => console.log('hello')}>Add New Rule</Button>
             </div>
             <RulesTable rules={rules} />
