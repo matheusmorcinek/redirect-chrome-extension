@@ -31,21 +31,6 @@ const rulesMock = [{
             }
         }
     ]
-}, {
-    id: 164745742822062,
-    name: 'project 3',
-    description: 'mfe stage environment',
-    active: false,
-    conditions: [
-        {
-            id: 1,
-            request: {
-                value: 'facebook.com',
-                search: searchType.REGEX,
-                redirect: 'example.com'
-            }
-        }
-    ]
 }];
 
 //Valor default do contexto
@@ -62,11 +47,36 @@ const ExtensionContextProvider = ({ children }) => {
 
     const [rules, setRules] = useState(INITIAL_RULES_STATE);
 
+    const addRule = (name, description) => {
+        console.log("addRule");
+
+        const rule = {
+            id: new Date().getTime(),
+            name: name.trim(),
+            description: description.trim(),
+            active: false,
+            conditions: [
+                {
+                    id: 1,
+                    request: {
+                        value: 'facebook.com',
+                        search: searchType.REGEX,
+                        redirect: 'example.com'
+                    }
+                }
+            ]
+        };
+
+        setRules([...rules, rule]);
+        console.log(rules)
+    };
+
     return (
         <ExtensionContext.Provider
             value={{
                 rules,
                 setRules,
+                addRule
             }}
         >
             {children}

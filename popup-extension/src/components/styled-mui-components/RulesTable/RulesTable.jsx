@@ -6,6 +6,7 @@ import ExpandableTableRow from './ExpandableTableRow/ExpandableTableRow';
 import RedirectType from '../../RedirectType/RedirectType';
 import Button from '../CustomButton/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ExtensionContext from '../../../context/extensionContext';
 
 const useStyles = makeStyles({
     root: {
@@ -68,6 +69,8 @@ const RulesTable = ({ rules }) => {
 
     const { openRuleConditionModal } = useRuleConditionModal();
 
+    const { addRule } = React.useContext(ExtensionContext);
+
     const classes = useStyles();
 
     return (
@@ -99,7 +102,7 @@ const RulesTable = ({ rules }) => {
                                 <Switch checked={rule.active} />
                             </TableCell>
                             <TableCell align="right">
-                                <Button variant="contained" size="small" onClick={() => openRuleConditionModal(rule)}>Add Condition</Button>
+                                <Button variant="contained" size="small" onClick={() => addRule('test', 'desc')}>Add Condition</Button>
                                 <IconButton color="primary" aria-label="upload picture" component="span">
                                     <DeleteIcon color='action' />
                                 </IconButton>

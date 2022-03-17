@@ -1,0 +1,18 @@
+.modal-header-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.modal-header-container-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.modal-header-container-close-button {
+  display: flex;
+  width: fit-content;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
