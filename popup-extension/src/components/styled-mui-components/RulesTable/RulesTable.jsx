@@ -10,6 +10,7 @@ import Switch from '@mui/material/Switch';
 import Paper from '@mui/material/Paper';
 import Button from '../../../components/styled-mui-components/Button';
 import RedirectType from '../../RedirectType/RedirectType';
+import useRuleConditionModal from '../../../hooks/useRuleConditionModal';
 
 // const TableCell = styled(TableCell)(({ theme }) => ({
 //     [`&.${tableCellClasses.head}`]: {
@@ -27,6 +28,8 @@ import RedirectType from '../../RedirectType/RedirectType';
 // }));
 
 const RulesTable = ({ rules }) => {
+
+    const { openRuleConditionModal } = useRuleConditionModal();
 
     return (
         <TableContainer component={Paper}>
@@ -53,7 +56,7 @@ const RulesTable = ({ rules }) => {
                                 <Switch checked={rule.active} />
                             </TableCell>
                             <TableCell align="right">
-                                <Button variant="contained" onClick={() => console.log('hello')}>Add Condition</Button>
+                                <Button variant="contained" onClick={() => openRuleConditionModal(rule)}>Add Condition</Button>
                             </TableCell>
                         </TableRow>
                     ))}

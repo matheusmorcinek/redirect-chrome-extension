@@ -9,7 +9,7 @@ const App = () => {
 
   return (
     <>
-      <div className="app-popup-header">
+      <div id="extension-app" className="app-popup-header">
         <h1>💻 Redirect Network Request Chrome Extension</h1>
       </div>
       <ExtensionContextProvider>

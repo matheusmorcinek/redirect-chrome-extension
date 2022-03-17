@@ -11,7 +11,7 @@ const rulesMock = [{
             id: 1,
             request: {
                 value: 'google.com',
-                search: searchType.EQUALS,
+                search: 'EQUALS',
                 redirect: 'something.com'
             }
         }
@@ -26,7 +26,7 @@ const rulesMock = [{
             id: 1,
             request: {
                 value: 'facebook.com',
-                search: searchType.REGEX,
+                search: 'REGEX',
                 redirect: 'example.com'
             }
         }
