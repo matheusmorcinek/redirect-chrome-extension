@@ -22,22 +22,58 @@ const extensionButtonClicked = (tab) => {
 chrome.action.onClicked.addListener(tab => extensionButtonClicked(tab));
 
 
+// chrome.storage.sync.set({ "yourBody": "myBody" }, function(){
+//    console.log('yes saved')
+// });
+
+// chrome.storage.sync.get(/* String or Array */["yourBody"], function(items){
+//     //  items = [ { "yourBody": "myBody" } ]
+//     console.log('the items ', items)
+// });
+
+// chrome.storage.sync.get(/* String or Array */["rule"], function(items){
+//     //  items = [ { "yourBody": "myBody" } ]
+//     console.log('get rule on background, rule: ', items)
+// });
+
+// ADDICIONAR URL COM declarativeNetRequest
+// blockUrls.forEach((domain, index) => {
+//     let id = index + 1;
+
+//     chrome.declarativeNetRequest.updateDynamicRules(
+//        {addRules:[{
+//           "id": id,
+//           "priority": 1,
+//           "action": { "type": "block" },
+//           "condition": {"urlFilter": domain, "resourceTypes": ["main_frame"] }}
+//          ],
+//          removeRuleIds: [id]
+//        },
+//     )
+// })
+
+setInterval(() => {
 
 
-chrome.storage.sync.set({ "yourBody": "myBody" }, function(){
-   console.log('yes saved')
-});
+    // chrome.storage.sync.get(null, function(items) {
+    //     var allKeys = Object.keys(items);
+    //     console.log(allKeys);
+    // });
 
-chrome.storage.sync.get(/* String or Array */["yourBody"], function(items){
-    //  items = [ { "yourBody": "myBody" } ]
-    console.log('the items ', items)
-});
+    // chrome.storage.sync.get(/* String or Array */["rules"], function(items){
+    //     //  items = [ { "yourBody": "myBody" } ]
+    //     console.log(' ')
+    //     console.log('get rules on background, rules: ', items)
+    // });
 
-chrome.storage.sync.get(/* String or Array */["rule"], function(items){
-    //  items = [ { "yourBody": "myBody" } ]
-    console.log('get rule on background, rule: ', items)
-});
 
+    console.log('declarative net rules');
+    
+    chrome.declarativeNetRequest.getDynamicRules(rules => {
+        console.log('rules result ', rules)
+    })
+    
+}, 5000);
 
 // setInterval(() => {
 

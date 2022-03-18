@@ -9,15 +9,6 @@
   "background": {
     "service_worker": "background.js"
   },
-  "declarative_net_request": {
-    "rule_resources": [
-      {
-        "id": "ruleset_1",
-        "enabled": true,
-        "path": "rules.json"
-      }
-    ]
-  },
   "host_permissions": ["*://*/*"],
   "permissions": [
     "declarativeNetRequest",
@@ -31,6 +22,15 @@
 //   "content_scripts": [{ "matches": ["<all_urls>"], "js": ["content.js"] }],
 // https://developer.chrome.com/docs/extensions/mv3/manifest/
 
+// "declarative_net_request": {
+//   "rule_resources": [
+//     {
+//       "id": "ruleset_1",
+//       "enabled": true,
+//       "path": "rules.json"
+//     }
+//   ]
+// },
 
 //chrome extension structure https://javascript.plainenglish.io/creating-a-chrome-extension-with-react-d92db20550cb
 

@@ -1,14 +1,11 @@
-import React, { useContext } from 'react';
+import CloseIcon from '@mui/icons-material/Close';
+import { IconButton } from '@mui/material';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import Condition from '../Condition/Condition';
+import TextField from '@mui/material/TextField';
+import React from 'react';
 import Button from '../styled-mui-components/CustomButton/Button';
 import styles from './RuleModal.module.css';
-import { IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
-import TextField from '@mui/material/TextField';
-import ExtensionContext from '../../context/extensionContext';
 
 const style = {
     position: 'absolute',

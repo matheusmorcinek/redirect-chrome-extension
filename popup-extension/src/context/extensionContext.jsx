@@ -1,5 +1,6 @@
 import React, { createContext, useState } from "react";
 import { searchType } from '../constants/search';
+import { addNewRule, getRulesSyncData } from '../main';
 
 const rulesMock = [{
     id: 1647457428206,
@@ -45,10 +46,28 @@ const ExtensionContext = createContext();
  */
 const ExtensionContextProvider = ({ children }) => {
 
-    const [rules, setRules] = useState(INITIAL_RULES_STATE);
+    //TODO criar uma browser action no background que monitora a lista de urls que foram redirecionadas,
+    //se pelo menos uma estiver, trocar o icone para aviso visual da extensao
+    //https://stackoverflow.com/questions/47310292/chrome-extension-dynamically-change-icon-without-clicking
+    //ver codigo que monitora o google no background
+
+
+    //https://sunnyzhou-1024.github.io/chrome-extension-docs/extensions/declarativeNetRequest.html#method-updateDynamicRules
+    const [rules, setRules] = useState([]);
+
+    React.useEffect(() => {
+        console.log('Extension Context Provider did mount!')
+        getRulesSyncData().then(rules => {
+            console.log('chegou')
+            console.log('rules', rules)
+            setRules(rules);
+        });
+    }, []);
 
     const addRule = (name, description) => {
-        console.log("addRule");
+
+        console.log(' ')
+        console.log('inside app context')
 
         const rule = {
             id: new Date().getTime(),
@@ -67,8 +86,8 @@ const ExtensionContextProvider = ({ children }) => {
             ]
         };
 
+        addNewRule(rule);
         setRules([...rules, rule]);
-        console.log(rules)
     };
 
     return (
