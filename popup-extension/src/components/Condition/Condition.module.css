@@ -1,11 +1,6 @@
 .condition-container {
   display: flex;
   flex-direction: column;
-  border: solid 1px #000;
-  padding: 0.5rem 0.2rem;
-  margin: 0.5rem 0;
-  padding-right: 3.5rem;
-  position: relative;
 }
 
 .condition-container-row-one {
@@ -21,9 +16,9 @@
   gap: 2rem;
 }
 
-.condition-container-delete-button {
+/* .condition-container-delete-button {
   display: flex;
   width: fit-content;
   position: absolute;
   right: 0.5rem;
-}
+} */

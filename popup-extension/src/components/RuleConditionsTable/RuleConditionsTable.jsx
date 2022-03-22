@@ -4,6 +4,7 @@ import { Paper, Input, TableRow, TableHead, TableCell, TableBody, Table, TablePa
 import DoneIcon from '@mui/icons-material/Done';
 import UndoIcon from '@mui/icons-material/Undo';
 import EditIcon from '@mui/icons-material/Edit';
+import Condition from "../Condition/Condition";
 
 
 const useStyles = makeStyles({
@@ -15,15 +16,7 @@ const useStyles = makeStyles({
         width: 550
     },
     selectTableCell: {
-        width: 60
-    },
-    tableCell: {
-        width: 130,
-        height: 40
-    },
-    input: {
-        width: 130,
-        height: 40
+        width: 80
     }
 });
 
@@ -34,36 +27,14 @@ const createData = (condition) => ({
 
 const CustomTableCell = ({ row, onChange }) => {
 
-    const classes = useStyles();
-    const { isEditMode } = row;
+    const { isEditMode, condition } = row;
 
-    // return (
-    //     <TableCell align="left" className={classes.tableCell}>
-    //         {isEditMode ? (
-    //             <Input
-    //                 value={row[name]}
-    //                 name={name}
-    //                 onChange={e => onChange(e, row)}
-    //                 className={classes.input}
-    //             />
-    //         ) : (
-    //             row[name]
-    //         )}
-    //     </TableCell>
-    // );
+    console.log(' @@ CustomTableCell ')
+    console.log('condition ', condition)
+
     return (
-        <TableCell align="left" className={classes.tableCell}>
-            {isEditMode ? (
-                // <Input
-                //     value={row[name]}
-                //     name={name}
-                //     onChange={e => onChange(e, row)}
-                //     className={classes.input}
-                // />
-                <span>edit mode, row.condition.request.value</span>
-            ) : (
-                <span>text mode, row.condition.request.value</span>
-            )}
+        <TableCell>
+            <Condition ruleId={1} condition={condition} isEditMode={isEditMode} />
         </TableCell>
     );
 };
