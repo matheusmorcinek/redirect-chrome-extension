@@ -1,13 +1,12 @@
-import React from 'react';
+import * as React from 'react';
 import Box from '@mui/material/Box';
-// import Typography from '@mui/material/Typography';
+import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import RuleConditionsTable from '../RuleConditionsTable/RuleConditionsTable';
-// import Condition from '../Condition/Condition';
+import Condition from '../Condition/Condition';
 import Button from '../styled-mui-components/CustomButton/Button';
 import styles from './RuleConditionsModal.module.css';
-// import { IconButton } from '@mui/material';
-// import CloseIcon from '@mui/icons-material/Close';
+import { IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 const style = {
     position: 'absolute',
@@ -21,9 +20,6 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
-
-
-
 
 export default function RuleConditionModal({ rule }) {
 
@@ -39,7 +35,6 @@ export default function RuleConditionModal({ rule }) {
             >
                 <>
                     <Box sx={style}>
-
                         <div className={styles['modal-header-container']}>
                             <h3>📝 Rule Conditions</h3>
                             <div className={styles['modal-header-container-buttons']}>
@@ -47,8 +42,16 @@ export default function RuleConditionModal({ rule }) {
                                 <Button variant="contained" size="small" onClick={() => console.log('hello')}>Save</Button>
                             </div>
                         </div>
-
-                        <RuleConditionsTable />
+                        {
+                            rule.conditions.map(condition => (
+                                <Condition>id {condition.id}</Condition>
+                            ))
+                        }
+                        <div className={styles['modal-header-container-close-button']}>
+                            <IconButton color="primary" size="small" aria-label="upload picture" component="span">
+                                <CloseIcon color='action' />
+                            </IconButton>
+                        </div>
                     </Box>
                 </>
             </Modal> : null
