@@ -4,7 +4,10 @@ import { Paper, Input, TableRow, TableHead, TableCell, TableBody, Table, TablePa
 import DoneIcon from '@mui/icons-material/Done';
 import UndoIcon from '@mui/icons-material/Undo';
 import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Condition from "../Condition/Condition";
+import Button from '../styled-mui-components/CustomButton/Button';
+import styles from './RuleConditionsTable.module.css';
 
 
 const useStyles = makeStyles({
@@ -29,55 +32,33 @@ const CustomTableCell = ({ row, onChange }) => {
 
     const { isEditMode, condition } = row;
 
-    console.log(' @@ CustomTableCell ')
-    console.log('condition ', condition)
-
     return (
         <TableCell>
-            <Condition ruleId={1} condition={condition} isEditMode={isEditMode} />
+            <Condition
+                condition={condition}
+                isEditMode={isEditMode}
+                onChange={onChange}
+            />
         </TableCell>
     );
 };
 
-const mockConditions = [
-    {
-        id: 1,
-        request: {
-            value: 'google.com',
-            search: 'EQUALS',
-            redirect: 'something.com'
-        }
-    },
-    {
-        id: 2,
-        request: {
-            value: 'linkedin',
-            search: 'CONTAINS',
-            redirect: 'blocked.com'
-        }
-    }
-];
+const RuleConditionsTable = ({ rule, updateRuleConditions, onSaveConditions }) => {
 
-const RuleConditionsTable = ({ conditions = mockConditions }) => {
+    const { conditions } = rule;
 
-    React.useEffect(() => {
-
-        console.log(' ')
-        console.log(' @ RuleConditionsTable did render')
-        console.log(' conditions ', conditions)
-        console.log(' rows ', rows)
-
-        conditions.forEach(condition => console.log(createData(condition)));
-    });
+    const [updatedConditions, setUpdatedConditions] = React.useState([]);
 
     const [rows, setRows] = React.useState(conditions.length > 0 ? conditions.map(condition => createData(condition)) : []);
 
-    const [previous, setPrevious] = React.useState({});
     const classes = useStyles();
 
-    const onToggleEditMode = id => {
+    React.useEffect(() => {
+        console.log('RuleConditionsTable did render')
+        console.log('updatedConditions', updatedConditions);
+    })
 
-        console.log("onToggleEditMode id", id)
+    const onToggleEditMode = id => {
 
         setRows(state => {
             return rows.map(row => {
@@ -89,40 +70,26 @@ const RuleConditionsTable = ({ conditions = mockConditions }) => {
         });
     };
 
-    const onChange = (e, row) => {
+    const onChange = (updatedCondition) => {
 
-        console.log(' onChange row', row)
+        const tempConditions = updatedConditions.filter(condition => condition.id != updatedCondition.id);
+        tempConditions.push(updatedCondition);
+        setUpdatedConditions(tempConditions);
+    };
 
-        // if (!previous[row.id]) {
-        //     setPrevious(state => ({ ...state, [row.id]: row }));
-        // }
-        // const value = e.target.value;
-        // const name = e.target.name;
-        // const { id } = row.condition;
-        // const newRows = rows.map(row => {
-        //     if (row.condition.id === id) {
-        //         return { ...row, [name]: value };
-        //     }
-        //     return row;
-        // });
-        // setRows(newRows);
+    const onSave = () => {
+        updateRuleConditions(rule.id, updatedConditions)
+        onSaveConditions();
+    };
+
+    const onDelete = id => {
+        onToggleEditMode(id);
     };
 
     const onRevert = id => {
 
-        console.log(' onRevert id', id)
-
-        // const newRows = rows.map(row => {
-        //     if (row.id === id) {
-        //         return previous[id] ? previous[id] : row;
-        //     }
-        //     return row;
-        // });
-        // setRows(newRows);
-        // setPrevious(state => {
-        //     delete state[id];
-        //     return state;
-        // });
+        const tempConditions = updatedConditions.filter(condition => condition.id != id);
+        setUpdatedConditions(tempConditions);
         onToggleEditMode(id);
     };
 
@@ -139,54 +106,65 @@ const RuleConditionsTable = ({ conditions = mockConditions }) => {
     };
 
     return (
-        <Paper className={classes.root}>
-            <Table size={'small'} className={classes.table} aria-label="caption table">
-                <TableBody>
-                    {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map(row => (
-                            <TableRow key={row.condition.id}>
-                                <TableCell className={classes.selectTableCell}>
-                                    {row.isEditMode ? (
-                                        <>
+        <>
+            <div className={styles['modal-header-container']}>
+                <h3>📝 Rule Conditions</h3>
+                <div className={styles['modal-header-container-buttons']}>
+                    <Button variant="text" size="small" onClick={() => console.log('hello')}>➕ Add Condition</Button>
+                    <Button variant="contained" size="small" onClick={() => onSave()}>Save All</Button>
+                </div>
+            </div>
+
+            <Paper className={classes.root}>
+                <Table size={'small'} className={classes.table} aria-label="caption table">
+                    <TableBody>
+                        {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                            .map(row => (
+                                <TableRow key={row.condition.id}>
+                                    <TableCell className={classes.selectTableCell}>
+                                        {row.isEditMode ? (
+                                            <>
+                                                <IconButton
+                                                    aria-label="delete"
+                                                    onClick={() => onDelete(row.condition.id)}
+                                                >
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                                <IconButton
+                                                    aria-label="revert"
+                                                    onClick={() => onRevert(row.condition.id)}
+                                                >
+                                                    <UndoIcon />
+                                                </IconButton>
+                                            </>
+                                        ) : (
                                             <IconButton
-                                                aria-label="done"
+                                                aria-label="delete"
                                                 onClick={() => onToggleEditMode(row.condition.id)}
                                             >
-                                                <DoneIcon />
+                                                <EditIcon />
                                             </IconButton>
-                                            <IconButton
-                                                aria-label="revert"
-                                                onClick={() => onRevert(row.condition.id)}
-                                            >
-                                                <UndoIcon />
-                                            </IconButton>
-                                        </>
-                                    ) : (
-                                        <IconButton
-                                            aria-label="delete"
-                                            onClick={() => onToggleEditMode(row.condition.id)}
-                                        >
-                                            <EditIcon />
-                                        </IconButton>
-                                    )}
-                                </TableCell>
-                                <CustomTableCell {...{ row, onChange }} />
-                            </TableRow>
-                        ))}
-                </TableBody>
-            </Table>
+                                        )}
+                                    </TableCell>
+                                    <CustomTableCell {...{ row, onChange }} />
+                                </TableRow>
+                            ))}
+                    </TableBody>
+                </Table>
 
-            <TablePagination
-                rowsPerPageOptions={[5]}
-                component="div"
-                count={rows.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-            />
+                <TablePagination
+                    rowsPerPageOptions={[5]}
+                    component="div"
+                    count={rows.length}
+                    rowsPerPage={rowsPerPage}
+                    page={page}
+                    onPageChange={handleChangePage}
+                    onRowsPerPageChange={handleChangeRowsPerPage}
+                />
 
-        </Paper>
+            </Paper>
+        </>
+
     );
 }
 

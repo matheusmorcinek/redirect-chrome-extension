@@ -16,9 +16,7 @@
   gap: 2rem;
 }
 
-/* .condition-container-delete-button {
-  display: flex;
-  width: fit-content;
-  position: absolute;
-  right: 0.5rem;
-} */
+.highlight {
+  background-color: #18bb8f;
+  color: #fff;
+}

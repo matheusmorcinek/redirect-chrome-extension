@@ -9,11 +9,27 @@ const rulesMock = [{
     active: true,
     conditions: [
         {
-            id: 1,
+            id: 101,
             request: {
                 value: 'google.com',
                 search: 'EQUALS',
                 redirect: 'something.com'
+            }
+        },
+        {
+            id: 102,
+            request: {
+                value: 'facebook.com',
+                search: 'EQUALS',
+                redirect: 'ban.com'
+            }
+        },
+        {
+            id: 104,
+            request: {
+                value: 'linkedin',
+                search: 'EQUALS',
+                redirect: 'orkut.com'
             }
         }
     ]
@@ -76,11 +92,27 @@ const ExtensionContextProvider = ({ children }) => {
             active: false,
             conditions: [
                 {
-                    id: 1,
+                    id: 101,
+                    request: {
+                        value: 'google.com',
+                        search: 'EQUALS',
+                        redirect: 'something.com'
+                    }
+                },
+                {
+                    id: 102,
                     request: {
                         value: 'facebook.com',
-                        search: searchType.REGEX,
-                        redirect: 'example.com'
+                        search: 'EQUALS',
+                        redirect: 'ban.com'
+                    }
+                },
+                {
+                    id: 104,
+                    request: {
+                        value: 'linkedin',
+                        search: 'EQUALS',
+                        redirect: 'orkut.com'
                     }
                 }
             ]
@@ -90,12 +122,33 @@ const ExtensionContextProvider = ({ children }) => {
         setRules([...rules, rule]);
     };
 
+    const updateRuleConditions = (ruleId, updatedConditions) => {
+
+        const updatedRules = rules.map(rule => {
+            if (rule.id === ruleId) {
+
+                const tempConditions = rule.conditions.filter(condition => !updatedConditions.some(updatedCondition => updatedCondition.id === condition.id));
+
+                const updatedRule = {
+                    ...rule,
+                    conditions: [...tempConditions, ...updatedConditions]
+                }
+
+                return updatedRule;
+            }
+            return rule;
+        });
+
+        setRules(updatedRules.sort((a, b) => (a.id > b.id) ? 1 : -1));
+    }
+
     return (
         <ExtensionContext.Provider
             value={{
                 rules,
                 setRules,
-                addRule
+                addRule,
+                updateRuleConditions
             }}
         >
             {children}

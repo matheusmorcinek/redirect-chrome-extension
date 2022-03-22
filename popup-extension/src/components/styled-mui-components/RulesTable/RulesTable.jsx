@@ -6,7 +6,6 @@ import ExpandableTableRow from './ExpandableTableRow/ExpandableTableRow';
 import RedirectType from '../../RedirectType/RedirectType';
 import Button from '../CustomButton/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
-import ExtensionContext from '../../../context/extensionContext';
 
 const useStyles = makeStyles({
     root: {
@@ -18,21 +17,15 @@ const useStyles = makeStyles({
     }
 });
 
-function createData(name, calories, fat, carbs, protein, detail) {
-    return { name, calories, fat, carbs, protein, detail };
-}
-
 const RulesTable = ({ rules }) => {
 
     React.useEffect(() => {
+        console.log(' ')
         console.log("@ RulesTable did render")
-        console.log('rules.length ', rules.length)
         console.log('rules ', rules)
     })
 
     const { openRuleConditionModal } = useRuleConditionModal();
-
-    const { addRule } = React.useContext(ExtensionContext);
 
     const classes = useStyles();
 
@@ -66,7 +59,10 @@ const RulesTable = ({ rules }) => {
                             .map((rule) => (
                                 <ExpandableTableRow
                                     key={rule.id}
-                                    expandComponent={<TableCell colSpan="5">//CONDITIONS LIST</TableCell>}
+                                    expandComponent={
+                                        <TableCell colSpan="5">
+                                            {rule.conditions.map(condition => (<span key={condition.id}>{condition.request.search} {condition.request.value} </span>))}
+                                        </TableCell>}
                                 >
                                     <TableCell component="th" scope="row">
                                         <div>

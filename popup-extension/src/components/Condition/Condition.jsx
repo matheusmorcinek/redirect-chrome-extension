@@ -4,24 +4,63 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { searchType } from '../../constants/search.js'
-import { IconButton } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
 
-const Condition = ({ ruleId, condition, isEditMode }) => {
+const Condition = ({ condition, isEditMode, onChange }) => {
 
-    React.useEffect(() => {
-        console.log('@@@@ condition ', condition)
-    })
+    const [tempCondition, setTempCondition] = React.useState(condition);
 
-    // const [searchTypeValue, setSearchValueType] = React.useState(condition ? condition.request.search : 'EQUALS');
-    // const [requestValue, setRequestValue] = React.useState(condition ? condition.request.value : '');
-    // const [requestRedirect, setRequestRedirect] = React.useState(condition ? condition.request.redirect : '');
+    // React.useEffect(() => {
+    //     console.log('Condition did render')
+    //     console.log('condition ', condition)
+    //     console.log('tempCondition ', tempCondition)
+    // })
 
-    const [conditionDTO, setConditionDTO] = React.useState(condition);
-
-    //TODO
     const handleSearchTypeChange = (event) => {
-        // setSearchValueType(event.target.value);
+
+        const searchType = event.target.value;
+
+        const updatedTempCondition = {
+            ...tempCondition,
+            request: {
+                ...tempCondition.request,
+                search: searchType
+            }
+        };
+
+        setTempCondition(updatedTempCondition);
+        onChange(updatedTempCondition);
+    };
+
+    const handleSearchValueChange = (event) => {
+
+        const value = event.target.value;
+
+        const updatedTempCondition = {
+            ...tempCondition,
+            request: {
+                ...tempCondition.request,
+                value: value
+            }
+        };
+
+        setTempCondition(updatedTempCondition);
+        onChange(updatedTempCondition);
+    };
+
+    const handleSearchRedirectChange = (event) => {
+
+        const redirect = event.target.value;
+
+        const updatedTempCondition = {
+            ...tempCondition,
+            request: {
+                ...tempCondition.request,
+                redirect: redirect
+            }
+        };
+
+        setTempCondition(updatedTempCondition);
+        onChange(updatedTempCondition);
     };
 
     return (
@@ -31,7 +70,7 @@ const Condition = ({ ruleId, condition, isEditMode }) => {
                     <span>If request URL</span>
                     <Select
                         variant='standard'
-                        value={conditionDTO.request.search}
+                        value={tempCondition.request.search}
                         onChange={handleSearchTypeChange}
                         label="Age"
                         className={styles['custom-select']}
@@ -47,7 +86,8 @@ const Condition = ({ ruleId, condition, isEditMode }) => {
                         color="primary"
                         variant="outlined"
                         size="small"
-                        value={conditionDTO.request.value}
+                        value={tempCondition.request.value}
+                        onChange={(event) => handleSearchValueChange(event)}
                     />
                 </div>
                 <div className={styles['condition-container-row-two']}>
@@ -56,18 +96,14 @@ const Condition = ({ ruleId, condition, isEditMode }) => {
                         color="primary"
                         variant="outlined"
                         size="small"
-                        value={conditionDTO.request.redirect}
+                        value={tempCondition.request.redirect}
+                        onChange={(event) => handleSearchRedirectChange(event)}
                     />
                 </div>
-                {/* <div className={styles['condition-container-delete-button']}>
-                    <IconButton color="primary" aria-label="upload picture" component="span">
-                        <DeleteIcon color='action' />
-                    </IconButton>
-                </div> */}
             </div>
             :
             <div className={styles['condition-container']}>
-                <span><strong>If request URL</strong> {conditionDTO.request.search} {conditionDTO.request.value} <strong>Redirect to</strong> {conditionDTO.request.redirect}</span>
+                <span><strong>If request URL</strong> <span className={styles['highlight']}>{condition.request.search}</span> {condition.request.value} <strong>Redirect to</strong> {condition.request.redirect}</span>
             </div>
     )
 }
