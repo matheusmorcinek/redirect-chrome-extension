@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
 import { Paper, TableRow, TableHead, TableCell, TableBody, Table, Switch, IconButton, TablePagination } from '@mui/material';
 import useRuleConditionModal from '../../../hooks/useRuleConditionModal';
@@ -7,6 +7,7 @@ import RedirectType from '../../RedirectType/RedirectType';
 import Button from '../CustomButton/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
 import styles from './RulesTable.module.css';
+import ExtensionContext from '../../../context/extensionContext';
 
 const useStyles = makeStyles({
     root: {
@@ -26,6 +27,8 @@ const RulesTable = ({ rules }) => {
         console.log('rules ', rules)
     })
 
+    const { updateRuleStatus, removeRule } = useContext(ExtensionContext)
+
     const { openRuleConditionModal } = useRuleConditionModal();
 
     const classes = useStyles();
@@ -41,6 +44,14 @@ const RulesTable = ({ rules }) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
     };
+
+    const onChangeRuleStatus = (ruleId) => {
+        updateRuleStatus(ruleId)
+    }
+
+    const onRemoveRule = (ruleId) => {
+        removeRule(ruleId)
+    }
 
     return (
         rules.length > 0 ? <Paper className={classes.root}>
@@ -59,11 +70,12 @@ const RulesTable = ({ rules }) => {
                         rules.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((rule) => (
                                 <ExpandableTableRow
+                                    showExpandButton={rule.conditions.length > 0}
                                     className={'expandable-row'}
                                     key={rule.id}
                                     expandComponent={
                                         <div className={`${styles['conditions']} ${styles['scrollbar']}`} >
-                                            {rule.conditions.map(condition => (<span key={condition.id}>If request URL <span className={styles['highlight']}>{condition.request.search}</span> <span className={styles['condition-value']}>{condition.request.value}</span> Redirect to <span className={styles['condition-value']}>{condition.request.redirect}</span></span>))}
+                                            {rule.conditions.sort((a, b) => (a.id > b.id) ? 1 : -1).map(condition => (<span key={condition.id}>If request URL <span className={styles['highlight']}>{condition.request.search}</span> <span className={styles['condition-value']}>{condition.request.value}</span> Redirect to <span className={styles['condition-value']}>{condition.request.redirect}</span></span>))}
                                         </div>
                                     }
                                 >
@@ -75,12 +87,12 @@ const RulesTable = ({ rules }) => {
                                     </TableCell>
                                     <TableCell align="right"><RedirectType /></TableCell>
                                     <TableCell align="right">
-                                        <Switch checked={rule.active} />
+                                        <Switch checked={rule.active} onChange={() => onChangeRuleStatus(rule.id)} />
                                     </TableCell>
                                     <TableCell align="right">
-                                        <Button variant="contained" size="small" onClick={() => openRuleConditionModal(rule)}>Add Condition</Button>
+                                        <Button variant="contained" size="small" onClick={() => openRuleConditionModal(rule)}>{rule.conditions.length > 0 ? 'Edit Conditions' : 'Add Condition'}</Button>
                                         <IconButton color="primary" aria-label="upload picture" component="span">
-                                            <DeleteIcon color='action' />
+                                            <DeleteIcon color='action' onClick={() => onRemoveRule(rule.id)} />
                                         </IconButton>
                                     </TableCell>
                                 </ExpandableTableRow>

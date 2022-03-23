@@ -40,11 +40,43 @@ const rulesMock = [{
     active: false,
     conditions: [
         {
-            id: 1,
+            id: 101,
+            request: {
+                value: 'google.com',
+                search: 'EQUALS',
+                redirect: 'something.com'
+            }
+        },
+        {
+            id: 102,
             request: {
                 value: 'facebook.com',
-                search: 'REGEX',
-                redirect: 'example.com'
+                search: 'EQUALS',
+                redirect: 'ban.com'
+            }
+        },
+        {
+            id: 104,
+            request: {
+                value: 'linkedin',
+                search: 'EQUALS',
+                redirect: 'orkut.com'
+            }
+        },
+        {
+            id: 107,
+            request: {
+                value: 'site',
+                search: 'EQUALS',
+                redirect: 'site.com'
+            }
+        },
+        {
+            id: 108,
+            request: {
+                value: 'something',
+                search: 'EQUALS',
+                redirect: 'somesite.com'
             }
         }
     ]
@@ -69,7 +101,8 @@ const ExtensionContextProvider = ({ children }) => {
 
 
     //https://sunnyzhou-1024.github.io/chrome-extension-docs/extensions/declarativeNetRequest.html#method-updateDynamicRules
-    const [rules, setRules] = useState([]);
+    // const [rules, setRules] = useState([]);
+    const [rules, setRules] = useState(INITIAL_RULES_STATE);
 
     // React.useEffect(() => {
     //     console.log('Extension Context Provider did mount!')
@@ -158,13 +191,39 @@ const ExtensionContextProvider = ({ children }) => {
         setRules(updatedRules.sort((a, b) => (a.id > b.id) ? 1 : -1));
     }
 
+    const updateRuleStatus = (ruleId) => {
+
+        const updatedRules = rules.map(rule => {
+            if (rule.id === ruleId) {
+
+                const updatedRule = {
+                    ...rule,
+                    active: !rule.active
+                }
+
+                return updatedRule;
+            }
+            return rule;
+        });
+
+        setRules(updatedRules.sort((a, b) => (a.id > b.id) ? 1 : -1));
+    }
+
+    const removeRule = (ruleId) => {
+
+        const updatedRules = rules.filter(rule => rule.id !== ruleId);
+        setRules(updatedRules.sort((a, b) => (a.id > b.id) ? 1 : -1));
+    }
+
     return (
         <ExtensionContext.Provider
             value={{
                 rules,
                 setRules,
                 addRule,
-                updateRuleConditions
+                updateRuleConditions,
+                updateRuleStatus,
+                removeRule
             }}
         >
             {children}
