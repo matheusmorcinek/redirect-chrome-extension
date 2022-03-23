@@ -1,0 +1,10 @@
+.expanded-content-row {
+  background-color: #676060;
+  padding: 0;
+}
+
+.expanded-content-cell {
+  padding: 0 !important;
+  height: 50px;
+}
+

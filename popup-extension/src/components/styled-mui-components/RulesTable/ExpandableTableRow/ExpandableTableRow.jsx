@@ -2,6 +2,7 @@ import React from 'react';
 import { IconButton, TableRow, TableCell } from '@mui/material';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import styles from './ExpandableTableRow.module.css';
 
 const ExpandableTableRow = ({ children, expandComponent, ...otherProps }) => {
     const [isExpanded, setIsExpanded] = React.useState(false);
@@ -17,9 +18,11 @@ const ExpandableTableRow = ({ children, expandComponent, ...otherProps }) => {
                 {children}
             </TableRow>
             {isExpanded && (
-                <TableRow>
+                <TableRow className={styles['expanded-content-row']}>
                     <TableCell padding="checkbox" />
-                    {expandComponent}
+                    <TableCell className={styles['expanded-content-cell']} colSpan="4">
+                        {expandComponent}
+                    </TableCell>
                 </TableRow>
             )}
         </>

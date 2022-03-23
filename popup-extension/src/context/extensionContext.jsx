@@ -114,6 +114,22 @@ const ExtensionContextProvider = ({ children }) => {
                         search: 'EQUALS',
                         redirect: 'orkut.com'
                     }
+                },
+                {
+                    id: 107,
+                    request: {
+                        value: 'site',
+                        search: 'EQUALS',
+                        redirect: 'site.com'
+                    }
+                },
+                {
+                    id: 108,
+                    request: {
+                        value: 'something',
+                        search: 'EQUALS',
+                        redirect: 'somesite.com'
+                    }
                 }
             ]
         };

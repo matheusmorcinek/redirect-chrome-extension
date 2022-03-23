@@ -6,6 +6,7 @@ import ExpandableTableRow from './ExpandableTableRow/ExpandableTableRow';
 import RedirectType from '../../RedirectType/RedirectType';
 import Button from '../CustomButton/Button';
 import DeleteIcon from '@mui/icons-material/Delete';
+import styles from './RulesTable.module.css';
 
 const useStyles = makeStyles({
     root: {
@@ -58,11 +59,13 @@ const RulesTable = ({ rules }) => {
                         rules.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                             .map((rule) => (
                                 <ExpandableTableRow
+                                    className={'expandable-row'}
                                     key={rule.id}
                                     expandComponent={
-                                        <TableCell colSpan="5">
-                                            {rule.conditions.map(condition => (<span key={condition.id}>{condition.request.search} {condition.request.value} </span>))}
-                                        </TableCell>}
+                                        <div className={`${styles['conditions']} ${styles['scrollbar']}`} >
+                                            {rule.conditions.map(condition => (<span key={condition.id}>If request URL <span className={styles['highlight']}>{condition.request.search}</span> <span className={styles['condition-value']}>{condition.request.value}</span> Redirect to <span className={styles['condition-value']}>{condition.request.redirect}</span></span>))}
+                                        </div>
+                                    }
                                 >
                                     <TableCell component="th" scope="row">
                                         <div>
