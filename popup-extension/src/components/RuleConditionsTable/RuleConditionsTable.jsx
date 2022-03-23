@@ -178,7 +178,7 @@ const RuleConditionsTable = ({ rule, updateRuleConditions, onSaveConditions }) =
                                                 </IconButton>
                                             </>
                                         ) : (
-                                            <IconButton
+                                            !row.removed && <IconButton
                                                 aria-label="delete"
                                                 onClick={() => onEdit(row.condition.id)}
                                             >
