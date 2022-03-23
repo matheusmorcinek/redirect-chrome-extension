@@ -171,12 +171,21 @@ const ExtensionContextProvider = ({ children }) => {
         setRules([...rules, rule]);
     };
 
-    const updateRuleConditions = (ruleId, updatedConditions) => {
+    const updateRuleConditions = (ruleId, updatedConditions, roRemoveConditions = []) => {
 
         const updatedRules = rules.map(rule => {
             if (rule.id === ruleId) {
 
-                const tempConditions = rule.conditions.filter(condition => !updatedConditions.some(updatedCondition => updatedCondition.id === condition.id));
+                let tempConditions;
+                if (roRemoveConditions.length > 0) {
+
+                    tempConditions = rule.conditions.filter(condition => !updatedConditions.some(updatedCondition => updatedCondition.id === condition.id) &&
+                        !roRemoveConditions.some(toRemoveCondition => toRemoveCondition.id === condition.id)
+                    );
+                } else {
+
+                    tempConditions = rule.conditions.filter(condition => !updatedConditions.some(updatedCondition => updatedCondition.id === condition.id));
+                }
 
                 const updatedRule = {
                     ...rule,
@@ -190,6 +199,27 @@ const ExtensionContextProvider = ({ children }) => {
 
         setRules(updatedRules.sort((a, b) => (a.id > b.id) ? 1 : -1));
     }
+
+    // const removeRuleConditions = (ruleId, toRemoveCoditions) => {
+
+    //     const updatedRules = rules.map(rule => {
+
+    //         if (rule.id === ruleId) {
+
+    //             const tempConditions = rule.conditions.filter(condition => !toRemoveCoditions.some(toRemoveCondition => toRemoveCondition.id === condition.id));
+
+    //             const updatedRule = {
+    //                 ...rule,
+    //                 conditions: [...tempConditions]
+    //             }
+
+    //             return updatedRule;
+    //         }
+    //         return rule;
+    //     });
+
+    //     setRules(updatedRules.sort((a, b) => (a.id > b.id) ? 1 : -1));
+    // }
 
     const updateRuleStatus = (ruleId) => {
 

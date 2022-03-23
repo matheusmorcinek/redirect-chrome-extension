@@ -20,3 +20,8 @@
   background-color: #18bb8f;
   color: #fff;
 }
+
+.removed {
+  text-decoration: line-through;
+  color: #867c7c;;
+}

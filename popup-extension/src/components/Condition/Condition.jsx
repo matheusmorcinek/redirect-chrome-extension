@@ -5,7 +5,7 @@ import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { searchType } from '../../constants/search.js'
 
-const Condition = ({ condition, isEditMode, onChange }) => {
+const Condition = ({ condition, isEditMode, onChange, removed }) => {
 
     const [tempCondition, setTempCondition] = React.useState(condition);
 
@@ -97,8 +97,8 @@ const Condition = ({ condition, isEditMode, onChange }) => {
             </div>
             :
             <div className={styles['condition-container']}>
-                <span><strong>If request URL</strong> <span className={styles['highlight']}>{condition.request.search}</span> {condition.request.value} <strong>Redirect to</strong> {condition.request.redirect}</span>
-            </div>
+                <span className={removed ? styles['removed'] : ''}><strong>If request URL</strong> <span className={styles['highlight']}>{condition.request.search}</span> {condition.request.value} <strong>Redirect to</strong> {condition.request.redirect}</span>
+            </div >
     )
 }
 

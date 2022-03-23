@@ -25,7 +25,8 @@ const useStyles = makeStyles({
 
 const createData = (condition, isEditMode = false) => ({
     condition,
-    isEditMode: isEditMode
+    isEditMode: isEditMode,
+    removed: false
 });
 
 const CustomTableCell = ({ row, onChange }) => {
@@ -38,6 +39,7 @@ const CustomTableCell = ({ row, onChange }) => {
                 condition={condition}
                 isEditMode={isEditMode}
                 onChange={onChange}
+                removed={row.removed}
             />
         </TableCell>
     );
@@ -48,19 +50,20 @@ const RuleConditionsTable = ({ rule, updateRuleConditions, onSaveConditions }) =
     const { conditions } = rule;
 
     const [updatedConditions, setUpdatedConditions] = React.useState([]);
+    const [toRemoveConditions, setToRemoveConditions] = React.useState([]);
     const [editCount, setEditCount] = React.useState(0);
 
     const [rows, setRows] = React.useState(conditions.length > 0 ? conditions.map(condition => createData(condition)) : []);
 
     const classes = useStyles();
 
-    const onToggleEditMode = id => {
+    const onToggleEditMode = (id, removed = false) => {
 
         setRows(state => {
             return rows.map(row => {
                 if (row.condition.id === id) {
 
-                    return { ...row, isEditMode: !row.isEditMode };
+                    return { ...row, isEditMode: !row.isEditMode, removed: removed };
                 }
                 return row;
             });
@@ -75,13 +78,20 @@ const RuleConditionsTable = ({ rule, updateRuleConditions, onSaveConditions }) =
     };
 
     const onSave = () => {
-        updateRuleConditions(rule.id, updatedConditions)
+        updateRuleConditions(rule.id, updatedConditions, toRemoveConditions);
         onSaveConditions();
     };
 
     const onDelete = id => {
-        setEditCount(editCount - 1);
-        onToggleEditMode(id);
+        const row = rows.filter(row => row.condition.id === id)[0];
+        setToRemoveConditions([...toRemoveConditions, row.condition]);
+
+        const tempConditions = updatedConditions.filter(condition => condition.id != id);
+        setUpdatedConditions(tempConditions);
+
+        setEditCount(editCount + 1);
+
+        onToggleEditMode(id, true);
     };
 
     const onEdit = id => {
