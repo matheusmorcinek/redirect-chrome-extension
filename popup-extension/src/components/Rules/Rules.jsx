@@ -9,11 +9,6 @@ const Rules = () => {
 
     const { rules } = useContext(ExtensionContext);
 
-    useEffect(() => {
-        console.log('rules component')
-        console.log("rules", rules)
-    })
-
     const { openRuleModal } = useRuleModal();
 
     return (

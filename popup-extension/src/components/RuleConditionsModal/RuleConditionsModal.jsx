@@ -27,11 +27,6 @@ const style = {
 
 export default function RuleConditionModal({ rule, updateRuleConditions }) {
 
-    React.useEffect(() => {
-        console.log('RuleConditionModal did render')
-        console.log('rule ', rule)
-    })
-
     const [open, setOpen] = React.useState(true);
 
     const handleClose = () => setOpen(false);

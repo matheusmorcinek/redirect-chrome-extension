@@ -21,12 +21,6 @@ const useStyles = makeStyles({
 
 const RulesTable = ({ rules }) => {
 
-    React.useEffect(() => {
-        console.log(' ')
-        console.log("@ RulesTable did render")
-        console.log('rules ', rules)
-    })
-
     const { updateRuleStatus, removeRule } = useContext(ExtensionContext)
 
     const { openRuleConditionModal } = useRuleConditionModal();
@@ -91,8 +85,8 @@ const RulesTable = ({ rules }) => {
                                     </TableCell>
                                     <TableCell align="right">
                                         <Button variant="contained" size="small" onClick={() => openRuleConditionModal(rule)}>{rule.conditions.length > 0 ? 'Edit Conditions' : 'Add Condition'}</Button>
-                                        <IconButton color="primary" aria-label="upload picture" component="span">
-                                            <DeleteIcon color='action' onClick={() => onRemoveRule(rule.id)} />
+                                        <IconButton onClick={() => onRemoveRule(rule.id)} color="primary" aria-label="upload picture" component="span">
+                                            <DeleteIcon color='action' />
                                         </IconButton>
                                     </TableCell>
                                 </ExpandableTableRow>

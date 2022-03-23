@@ -9,12 +9,6 @@ const Condition = ({ condition, isEditMode, onChange }) => {
 
     const [tempCondition, setTempCondition] = React.useState(condition);
 
-    // React.useEffect(() => {
-    //     console.log('Condition did render')
-    //     console.log('condition ', condition)
-    //     console.log('tempCondition ', tempCondition)
-    // })
-
     const handleSearchTypeChange = (event) => {
 
         const searchType = event.target.value;

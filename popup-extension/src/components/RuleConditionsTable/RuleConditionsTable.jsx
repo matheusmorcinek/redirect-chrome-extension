@@ -23,9 +23,9 @@ const useStyles = makeStyles({
     }
 });
 
-const createData = (condition) => ({
+const createData = (condition, isEditMode = false) => ({
     condition,
-    isEditMode: false
+    isEditMode: isEditMode
 });
 
 const CustomTableCell = ({ row, onChange }) => {
@@ -48,21 +48,18 @@ const RuleConditionsTable = ({ rule, updateRuleConditions, onSaveConditions }) =
     const { conditions } = rule;
 
     const [updatedConditions, setUpdatedConditions] = React.useState([]);
+    const [editCount, setEditCount] = React.useState(0);
 
     const [rows, setRows] = React.useState(conditions.length > 0 ? conditions.map(condition => createData(condition)) : []);
 
     const classes = useStyles();
-
-    React.useEffect(() => {
-        console.log('RuleConditionsTable did render')
-        console.log('updatedConditions', updatedConditions);
-    })
 
     const onToggleEditMode = id => {
 
         setRows(state => {
             return rows.map(row => {
                 if (row.condition.id === id) {
+
                     return { ...row, isEditMode: !row.isEditMode };
                 }
                 return row;
@@ -83,13 +80,30 @@ const RuleConditionsTable = ({ rule, updateRuleConditions, onSaveConditions }) =
     };
 
     const onDelete = id => {
+        setEditCount(editCount - 1);
+        onToggleEditMode(id);
+    };
+
+    const onEdit = id => {
+        setEditCount(editCount + 1);
         onToggleEditMode(id);
     };
 
     const onRevert = id => {
+        setEditCount(editCount - 1);
+
+        const row = rows.filter(row => row.condition.id === id)[0];
 
         const tempConditions = updatedConditions.filter(condition => condition.id != id);
         setUpdatedConditions(tempConditions);
+
+        if (row.condition.request.value === '' && row.condition.request.redirect === '') {
+            const updatedRows = rows.filter(row => row.condition.id != id);
+            setRows(updatedRows);
+
+            return;
+        }
+
         onToggleEditMode(id);
     };
 
@@ -105,13 +119,29 @@ const RuleConditionsTable = ({ rule, updateRuleConditions, onSaveConditions }) =
         setPage(0);
     };
 
+    const handleAddNewCondition = () => {
+
+        const newCondition = {
+            id: new Date().getTime(),
+            request: {
+                value: '',
+                search: 'EQUALS',
+                redirect: ''
+            }
+        };
+
+        setEditCount(editCount + 1);
+        setUpdatedConditions([...updatedConditions, newCondition]);
+        setRows([...rows, createData(newCondition, true)]);
+    }
+
     return (
         <>
             <div className={styles['modal-header-container']}>
                 <h3>📝 Rule Conditions</h3>
                 <div className={styles['modal-header-container-buttons']}>
-                    <Button variant="text" size="small" onClick={() => console.log('hello')}>➕ Add Condition</Button>
-                    <Button variant="contained" size="small" onClick={() => onSave()}>Save All</Button>
+                    <Button variant="text" size="small" onClick={() => handleAddNewCondition()}>➕ Add Condition</Button>
+                    <Button variant="contained" size="small" onClick={() => onSave()} disabled={editCount === 0}>Save All</Button>
                 </div>
             </div>
 
@@ -140,7 +170,7 @@ const RuleConditionsTable = ({ rule, updateRuleConditions, onSaveConditions }) =
                                         ) : (
                                             <IconButton
                                                 aria-label="delete"
-                                                onClick={() => onToggleEditMode(row.condition.id)}
+                                                onClick={() => onEdit(row.condition.id)}
                                             >
                                                 <EditIcon />
                                             </IconButton>
