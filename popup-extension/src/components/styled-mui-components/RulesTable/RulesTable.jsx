@@ -1,13 +1,13 @@
-import React, { useContext } from 'react';
 import { makeStyles } from '@material-ui/styles';
-import { Paper, TableRow, TableHead, TableCell, TableBody, Table, Switch, IconButton, TablePagination } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import { IconButton, Paper, Switch, Table, TableBody, TableCell, TableHead, TablePagination, TableRow } from '@mui/material';
+import React, { useContext } from 'react';
+import ExtensionContext from '../../../context/extensionContext';
 import useRuleConditionModal from '../../../hooks/useRuleConditionModal';
-import ExpandableTableRow from './ExpandableTableRow/ExpandableTableRow';
 import RedirectType from '../../RedirectType/RedirectType';
 import Button from '../CustomButton/Button';
-import DeleteIcon from '@mui/icons-material/Delete';
+import ExpandableTableRow from './ExpandableTableRow/ExpandableTableRow';
 import styles from './RulesTable.module.css';
-import ExtensionContext from '../../../context/extensionContext';
 
 const useStyles = makeStyles({
     root: {
@@ -109,6 +109,3 @@ const RulesTable = ({ rules }) => {
 }
 
 export default RulesTable;
-
-
-//switches https://mui.com/pt/components/switches/

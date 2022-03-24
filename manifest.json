@@ -13,6 +13,7 @@
   "permissions": [
     "declarativeNetRequest",
     "webNavigation",
+    "webRequest",
     "browserAction",
     "activeTab",
     "contextMenus",

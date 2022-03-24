@@ -1,9 +1,9 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext } from 'react';
 import ExtensionContext from '../../context/extensionContext';
+import useRuleModal from '../../hooks/useRuleModal';
 import Button from '../styled-mui-components/CustomButton/Button';
 import RulesTable from '../styled-mui-components/RulesTable/RulesTable';
 import styles from './Rules.module.css';
-import useRuleModal from '../../hooks/useRuleModal'
 
 const Rules = () => {
 
@@ -23,25 +23,3 @@ const Rules = () => {
 }
 
 export default Rules;
-
-
-// return (
-//     rules.length > 0 ? (
-//         <div className={styles['rules-container']} >
-//             <h3><DvrIcon /> HTTP Rules</h3>
-//             <div className={styles['rules-inner-container']}>
-//                 {rules.map(rule => (
-//                     <div key={rule.id}>
-//                         <h3>{rule.name}</h3>
-//                         <div className={styles['conditions-container']}>
-//                             <h4>Conditions</h4>
-//                             {
-//                                 rule.conditions.map(condition => (<Condition ruleId={rule.id} condition={condition} />))
-//                             }
-//                         </div>
-//                     </div>
-//                 ))}
-//             </div>
-//         </div>
-//     ) : null
-// )

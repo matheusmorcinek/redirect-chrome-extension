@@ -9,6 +9,58 @@ chrome.webNavigation.onCompleted.addListener(function () {
 }, { url: [{ urlMatches: 'https://www.google.com/' }] });
 
 
+// chrome.webRequest.onBeforeRedirect.addListener(function () {
+//     console.log("This is the new icon!!!");
+// }, { url: [{ urlMatches: 'http://localhost:3000/faviconRedirected.ico' }] });
+
+// chrome.webRequest.onBeforeRedirect.addListener(
+//     function () {
+//         console.log("This a request is the new icon!!!");
+//     },
+//     { urls: ['http://localhost:3000/faviconRedirected.ico'] }
+// )
+
+const networkFilters = {
+    urls: [
+        "http://localhost:3000/faviconRedirected.ico",
+        "https://www.google.com/"
+    ]
+};
+
+chrome.webRequest.onBeforeRequest.addListener((details) => {
+    // const { tabId, requestId } = details;
+    // if (!tabStorage.hasOwnProperty(tabId)) {
+    //     return;
+    // }
+
+    // tabStorage[tabId].requests[requestId] = {
+    //     requestId: requestId,
+    //     url: details.url,
+    //     startTime: details.timeStamp,
+    //     status: 'pending'
+    // };
+    // console.log(tabStorage[tabId].requests[requestId]);
+
+    console.log('chegou aqui !!!! ', details)
+
+    // {
+    //     "frameId": 0,
+    //     "initiator": "http://localhost:3000",
+    //     "method": "GET",
+    //     "parentFrameId": -1,
+    //     "requestId": "20610",
+    //     "tabId": 1171,
+    //     "timeStamp": 1648163965613.8142,
+    //     "type": "image",
+    //     "url": "http://localhost:3000/faviconRedirected.ico"
+    // }
+
+}, networkFilters);
+
+
+//TODO https://gilfink.medium.com/adding-web-interception-abilities-to-your-chrome-extension-fb42366df425
+//https://developer.chrome.com/docs/extensions/reference/webRequest/#event-onBeforeRedirect
+
 const extensionButtonClicked = (tab) => {
     console.log('Redirect Network Chrome Extension - button clicked');
 
