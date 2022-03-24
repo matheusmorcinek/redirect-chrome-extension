@@ -12,7 +12,8 @@ import ExtensionContext from '../../../context/extensionContext';
 const useStyles = makeStyles({
     root: {
         width: '100%',
-        overflowX: 'auto'
+        overflowX: 'auto',
+        marginBottom: '0.5rem'
     },
     table: {
         minWidth: 650
@@ -40,6 +41,7 @@ const RulesTable = ({ rules }) => {
     };
 
     const onChangeRuleStatus = (ruleId) => {
+        console.log('onChangeRuleStatus');
         updateRuleStatus(ruleId)
     }
 
@@ -81,7 +83,7 @@ const RulesTable = ({ rules }) => {
                                     </TableCell>
                                     <TableCell align="right"><RedirectType /></TableCell>
                                     <TableCell align="right">
-                                        <Switch checked={rule.active} onChange={() => onChangeRuleStatus(rule.id)} />
+                                        <Switch checked={rule.active} onChange={() => onChangeRuleStatus(rule.id)} disabled={rule.conditions.length === 0} />
                                     </TableCell>
                                     <TableCell align="right">
                                         <Button variant="contained" size="small" onClick={() => openRuleConditionModal(rule)}>{rule.conditions.length > 0 ? 'Edit Conditions' : 'Add Condition'}</Button>
@@ -94,7 +96,7 @@ const RulesTable = ({ rules }) => {
                 </TableBody>
             </Table>
             <TablePagination
-                rowsPerPageOptions={[1, 2, 5]}
+                rowsPerPageOptions={[1, 3, 5]}
                 component="div"
                 count={rules.length}
                 rowsPerPage={rowsPerPage}

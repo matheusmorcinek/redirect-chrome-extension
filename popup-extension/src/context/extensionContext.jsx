@@ -1,6 +1,6 @@
 import React, { createContext, useState } from "react";
 import { searchType } from '../constants/search';
-import { addNewRule, getRulesSyncData } from '../main';
+import { addNewRule, getRulesSyncData, updateChromeStorageRules } from '../main';
 
 const rulesMock = [{
     id: 1647457428206,
@@ -12,7 +12,7 @@ const rulesMock = [{
             id: 101,
             request: {
                 value: 'google.com',
-                search: 'EQUALS',
+                search: 'REGEX',
                 redirect: 'something.com'
             }
         },
@@ -113,62 +113,67 @@ const ExtensionContextProvider = ({ children }) => {
     //     });
     // }, []);
 
-    const addRule = (name, description) => {
+    // const rule = {
+    //     id: new Date().getTime(),
+    //     name: name.trim(),
+    //     description: description.trim(),
+    //     active: false,
+    //     conditions: [
+    //         {
+    //             id: 101,
+    //             request: {
+    //                 value: 'google.com',
+    //                 search: 'EQUALS',
+    //                 redirect: 'something.com'
+    //             }
+    //         },
+    //         {
+    //             id: 102,
+    //             request: {
+    //                 value: 'facebook.com',
+    //                 search: 'EQUALS',
+    //                 redirect: 'ban.com'
+    //             }
+    //         },
+    //         {
+    //             id: 104,
+    //             request: {
+    //                 value: 'linkedin',
+    //                 search: 'EQUALS',
+    //                 redirect: 'orkut.com'
+    //             }
+    //         },
+    //         {
+    //             id: 107,
+    //             request: {
+    //                 value: 'site',
+    //                 search: 'EQUALS',
+    //                 redirect: 'site.com'
+    //             }
+    //         },
+    //         {
+    //             id: 108,
+    //             request: {
+    //                 value: 'something',
+    //                 search: 'EQUALS',
+    //                 redirect: 'somesite.com'
+    //             }
+    //         }
+    //     ]
+    // };
 
-        console.log(' ')
-        console.log('inside app context')
+    const addRule = (name, description) => {
 
         const rule = {
             id: new Date().getTime(),
             name: name.trim(),
             description: description.trim(),
             active: false,
-            conditions: [
-                {
-                    id: 101,
-                    request: {
-                        value: 'google.com',
-                        search: 'EQUALS',
-                        redirect: 'something.com'
-                    }
-                },
-                {
-                    id: 102,
-                    request: {
-                        value: 'facebook.com',
-                        search: 'EQUALS',
-                        redirect: 'ban.com'
-                    }
-                },
-                {
-                    id: 104,
-                    request: {
-                        value: 'linkedin',
-                        search: 'EQUALS',
-                        redirect: 'orkut.com'
-                    }
-                },
-                {
-                    id: 107,
-                    request: {
-                        value: 'site',
-                        search: 'EQUALS',
-                        redirect: 'site.com'
-                    }
-                },
-                {
-                    id: 108,
-                    request: {
-                        value: 'something',
-                        search: 'EQUALS',
-                        redirect: 'somesite.com'
-                    }
-                }
-            ]
+            conditions: []
         };
 
-        // addNewRule(rule);
         setRules([...rules, rule]);
+        updateChromeStorageRules([...rules, rule]);
     };
 
     const updateRuleConditions = (ruleId, updatedConditions, roRemoveConditions = []) => {
@@ -192,34 +197,19 @@ const ExtensionContextProvider = ({ children }) => {
                     conditions: [...tempConditions, ...updatedConditions]
                 }
 
+                if (updatedRule.conditions.length === 0) {
+                    updatedRule.active = false;
+                }
+
                 return updatedRule;
             }
             return rule;
         });
 
+
         setRules(updatedRules.sort((a, b) => (a.id > b.id) ? 1 : -1));
+        updateChromeStorageRules(updatedRules);
     }
-
-    // const removeRuleConditions = (ruleId, toRemoveCoditions) => {
-
-    //     const updatedRules = rules.map(rule => {
-
-    //         if (rule.id === ruleId) {
-
-    //             const tempConditions = rule.conditions.filter(condition => !toRemoveCoditions.some(toRemoveCondition => toRemoveCondition.id === condition.id));
-
-    //             const updatedRule = {
-    //                 ...rule,
-    //                 conditions: [...tempConditions]
-    //             }
-
-    //             return updatedRule;
-    //         }
-    //         return rule;
-    //     });
-
-    //     setRules(updatedRules.sort((a, b) => (a.id > b.id) ? 1 : -1));
-    // }
 
     const updateRuleStatus = (ruleId) => {
 
@@ -237,12 +227,14 @@ const ExtensionContextProvider = ({ children }) => {
         });
 
         setRules(updatedRules.sort((a, b) => (a.id > b.id) ? 1 : -1));
+        updateChromeStorageRules(updatedRules);
     }
 
     const removeRule = (ruleId) => {
 
         const updatedRules = rules.filter(rule => rule.id !== ruleId);
         setRules(updatedRules.sort((a, b) => (a.id > b.id) ? 1 : -1));
+        updateChromeStorageRules(updatedRules);
     }
 
     return (

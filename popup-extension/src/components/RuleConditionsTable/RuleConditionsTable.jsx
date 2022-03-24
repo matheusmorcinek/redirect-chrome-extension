@@ -117,7 +117,7 @@ const RuleConditionsTable = ({ rule, updateRuleConditions, onSaveConditions }) =
         onToggleEditMode(id);
     };
 
-    const [rowsPerPage, setRowsPerPage] = React.useState(5);
+    const [rowsPerPage, setRowsPerPage] = React.useState(2);
     const [page, setPage] = React.useState(0);
 
     const handleChangePage = (event, newPage) => {
@@ -155,56 +155,57 @@ const RuleConditionsTable = ({ rule, updateRuleConditions, onSaveConditions }) =
                 </div>
             </div>
 
-            <Paper className={classes.root}>
-                <Table size={'small'} className={classes.table} aria-label="caption table">
-                    <TableBody>
-                        {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                            .map(row => (
-                                <TableRow key={row.condition.id}>
-                                    <TableCell className={classes.selectTableCell}>
-                                        {row.isEditMode ? (
-                                            <>
-                                                <IconButton
+            {
+                rows.length > 0 && <Paper className={classes.root}>
+                    <Table size={'small'} className={classes.table} aria-label="caption table">
+                        <TableBody>
+                            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                                .map(row => (
+                                    <TableRow key={row.condition.id}>
+                                        <TableCell className={classes.selectTableCell}>
+                                            {row.isEditMode ? (
+                                                <>
+                                                    <IconButton
+                                                        aria-label="delete"
+                                                        onClick={() => onDelete(row.condition.id)}
+                                                    >
+                                                        <DeleteIcon />
+                                                    </IconButton>
+                                                    <IconButton
+                                                        aria-label="revert"
+                                                        onClick={() => onRevert(row.condition.id)}
+                                                    >
+                                                        <UndoIcon />
+                                                    </IconButton>
+                                                </>
+                                            ) : (
+                                                !row.removed && <IconButton
                                                     aria-label="delete"
-                                                    onClick={() => onDelete(row.condition.id)}
+                                                    onClick={() => onEdit(row.condition.id)}
                                                 >
-                                                    <DeleteIcon />
+                                                    <EditIcon />
                                                 </IconButton>
-                                                <IconButton
-                                                    aria-label="revert"
-                                                    onClick={() => onRevert(row.condition.id)}
-                                                >
-                                                    <UndoIcon />
-                                                </IconButton>
-                                            </>
-                                        ) : (
-                                            !row.removed && <IconButton
-                                                aria-label="delete"
-                                                onClick={() => onEdit(row.condition.id)}
-                                            >
-                                                <EditIcon />
-                                            </IconButton>
-                                        )}
-                                    </TableCell>
-                                    <CustomTableCell {...{ row, onChange }} />
-                                </TableRow>
-                            ))}
-                    </TableBody>
-                </Table>
+                                            )}
+                                        </TableCell>
+                                        <CustomTableCell {...{ row, onChange }} />
+                                    </TableRow>
+                                ))}
+                        </TableBody>
+                    </Table>
 
-                <TablePagination
-                    rowsPerPageOptions={[5]}
-                    component="div"
-                    count={rows.length}
-                    rowsPerPage={rowsPerPage}
-                    page={page}
-                    onPageChange={handleChangePage}
-                    onRowsPerPageChange={handleChangeRowsPerPage}
-                />
+                    <TablePagination
+                        rowsPerPageOptions={[2, 3]}
+                        component="div"
+                        count={rows.length}
+                        rowsPerPage={rowsPerPage}
+                        page={page}
+                        onPageChange={handleChangePage}
+                        onRowsPerPageChange={handleChangeRowsPerPage}
+                    />
 
-            </Paper>
+                </Paper>
+            }
         </>
-
     );
 }
 

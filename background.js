@@ -55,24 +55,39 @@ chrome.action.onClicked.addListener(tab => extensionButtonClicked(tab));
 setInterval(() => {
 
 
+    // console.log('testing regex')
+
+    // chrome.declarativeNetRequest.isRegexSupported(
+    //     {
+    //         regex: '^http://localhost:(.*)'
+    //     },
+    //     (result) => {
+    //         console.log('isRegexSupported resultado ', result)
+    //     }
+    // )
+
+    // {
+    //     "isSupported": true
+    // }
+
+
     // chrome.storage.sync.get(null, function(items) {
     //     var allKeys = Object.keys(items);
     //     console.log(allKeys);
     // });
 
-    // chrome.storage.sync.get(/* String or Array */["rules"], function(items){
-    //     //  items = [ { "yourBody": "myBody" } ]
-    //     console.log(' ')
-    //     console.log('get rules on background, rules: ', items)
-    // });
+    chrome.storage.sync.get(/* String or Array */["rules"], function (items) {
+        //  items = [ { "yourBody": "myBody" } ]
+        console.log(' ')
+        console.log('getting storage rules on background, rules: ', items)
+    });
 
 
     console.log('declarative net rules');
-    
     chrome.declarativeNetRequest.getDynamicRules(rules => {
-        console.log('rules result ', rules)
+        console.log('chrome dynamic rules ', rules)
     })
-    
+
 }, 5000);
 
 // setInterval(() => {
@@ -82,7 +97,7 @@ setInterval(() => {
 //         //  items = [ { "yourBody": "myBody" } ]
 //         console.log('get rule on background, rule: ', items)
 //     });
-    
+
 // }, 2000);
 
 // chrome.storage.sync.get(null, function(items) {
@@ -178,3 +193,119 @@ setInterval(() => {
 //         tabStorage[tabId] = null;
 //     });
 // }());
+
+const removeAllDynamicRules = () => {
+
+    return new Promise((resolve, reject) => {
+
+        chrome.declarativeNetRequest.getDynamicRules(rules => {
+
+            if (chrome.runtime.lastError) {
+                return reject(chrome.runtime.lastError);
+            }
+
+            const ids = rules.map(rule => rule.id);
+
+            chrome.declarativeNetRequest.updateDynamicRules(
+                {
+                    addRules: [],
+                    removeRuleIds: ids
+                },
+                () => {
+                    console.log('chrome dynamic rules has been removed')
+                    resolve();
+                }
+            );
+        });
+    });
+}
+
+const resourceTypes = [
+    "main_frame",
+    "sub_frame",
+    "stylesheet",
+    "script",
+    "image",
+    "font",
+    "object",
+    "xmlhttprequest",
+    "ping",
+    "csp_report",
+    "media",
+    "websocket",
+    "webtransport",
+    "webbundle"
+];
+
+const updateChromeDynamicRules = () => {
+
+    removeAllDynamicRules().then(() => {
+        console.log('removeAllDynamicRules completed!')
+
+        chrome.storage.sync.get(["rules"], function (data) {
+            const { rules } = data;
+
+            const activeConditions = rules.reduce((activeConditions, rule) => {
+                if (rule.active) {
+                    return [...activeConditions, ...rule.conditions]
+                }
+                return activeConditions
+            }, []);
+
+            console.log('active conditions ', activeConditions);
+
+            const dynamicRules = activeConditions.map((condition, index) => {
+
+                const id = index + 1;
+
+                const dynamicRule = {
+                    id: id,
+                    priority: 1,
+                    action: {
+                        type: "redirect",
+                        redirect: {
+                            url: condition.request.redirect
+                        }
+                    }
+                };
+
+                if (condition.request.search === 'EQUALS' || condition.request.search === 'CONTAINS') {
+
+                    dynamicRule.condition = {
+                        urlFilter: condition.request.value,
+                        resourceTypes: resourceTypes
+                    }
+                } else {
+
+                    dynamicRule.condition = {
+                        regexFilter: condition.request.value,
+                        resourceTypes: resourceTypes
+                    }
+                }
+
+                return dynamicRule;
+            });
+
+            chrome.declarativeNetRequest.updateDynamicRules(
+                {
+                    addRules: dynamicRules,
+                    removeRuleIds: []
+                },
+                () => {
+                    console.log('chrome dynamic rules has been updated!')
+                }
+            );
+        });
+    });
+}
+
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+    if (request.type == "notification") {
+        console.log('[background] received notification! ', request.options);
+        updateChromeDynamicRules();
+        // chrome.notifications.create('worktimer-notification', request.options, function () { });
+    }
+
+    sendResponse();
+});
+

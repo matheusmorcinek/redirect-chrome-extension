@@ -51,45 +51,96 @@ export const getRulesSyncData = () => {
     });
 }
 
+
+const notifyChromeBackgroundScript = () => {
+    chrome.runtime.sendMessage({
+        type: "notification", options: {
+            type: "basic",
+            // iconUrl: chrome.extension.getURL("icon128.png"),
+            title: "Test",
+            message: "Test"
+        }
+    });
+}
+
+export const updateChromeStorageRules = (rules) => {
+
+    chrome.storage.sync.set({ "rules": rules }, () => {
+        console.log('Rules storage has been updated!');
+    });
+
+    notifyChromeBackgroundScript();
+}
+
 export const addNewRule = (rule) => {
 
     console.log(' ')
     console.log('inside main script 2')
 
-    // chrome.storage.sync.get(["rules"], (data) => {
+    chrome.storage.sync.get(["rules"], (data) => {
 
-    //     console.log('get rules on the main, rules: ', data)
+        console.log('get rules on the main, rules: ', data)
 
-    //     const { rules } = data;
+        const { rules } = data;
 
-    //     let value;
-    //     if (rules) {
-    //         value = [...rules, rule];
-    //     } else {
-    //         value = [rule];
-    //     }
+        let value;
+        if (rules) {
+            value = [...rules, rule];
+        } else {
+            value = [rule];
+        }
 
-    //     chrome.storage.sync.set({ "rules": value }, () => {
-    //         console.log('new rule has been saved!');
-    //     });
-    // });
+        chrome.storage.sync.set({ "rules": value }, () => {
+            console.log('new rule has been saved!');
+        });
+    });
 
-
-    chrome.declarativeNetRequest.updateDynamicRules(
-        {
-            addRules: [{
-                "id": 1,
-                "priority": 1,
-                "action": { "type": "block" },
-                "condition": { "urlFilter": "googletest.com", "resourceTypes": ["main_frame"] }
-            }
-            ]
-        },
-    )
+    // chrome.declarativeNetRequest.updateDynamicRules(
+    //     {
+    //         addRules: [{
+    //             "id": 1,
+    //             "priority": 1,
+    //             "action": { "type": "block" },
+    //             "condition": { "urlFilter": "googletest.com", "resourceTypes": ["main_frame"] }
+    //         }
+    //         ]
+    //     },
+    // )
+    // chrome.declarativeNetRequest.updateDynamicRules(
+    //     {
+    //         addRules: [{
+    //             "id": 1,
+    //             "priority": 1,
+    //             "action": { "type": "block" },
+    //             "condition": { "urlFilter": "googletest.com", "resourceTypes": ["main_frame"] }
+    //         }
+    //         ]
+    //     },
+    // )
 
 };
 
+export const isRegexSupported = (regex) => {
+
+    return new Promise((resolve, reject) => {
+
+        chrome.declarativeNetRequest.isRegexSupported(
+            {
+                regex: regex
+            },
+            (result) => {
+
+                if (chrome.runtime.lastError) {
+                    return reject(chrome.runtime.lastError);
+                }
+
+                resolve(result.isSupported);
+            }
+        )
+    });
+}
 
 
+//resourceType https://developer.chrome.com/docs/extensions/reference/declarativeNetRequest/#type-ResourceType
 
 

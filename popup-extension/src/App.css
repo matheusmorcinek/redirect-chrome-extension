@@ -1,3 +1,7 @@
+html {
+  background-color: #191414;
+}
+
 h1 {
   font-size: 1.1em;
 }
@@ -41,7 +45,7 @@ h4 {
 .app-popup-container {
   background-color: #191414;
   width: 700px;
-  height: 550px;
+  height: 425px;
   display: flex;
   flex-direction: column;
   align-items: center;

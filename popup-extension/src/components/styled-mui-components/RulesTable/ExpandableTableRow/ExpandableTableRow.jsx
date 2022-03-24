@@ -7,6 +7,12 @@ import styles from './ExpandableTableRow.module.css';
 const ExpandableTableRow = ({ children, expandComponent, showExpandButton, ...otherProps }) => {
     const [isExpanded, setIsExpanded] = React.useState(false);
 
+    React.useEffect(() => {
+        if (!showExpandButton) {
+            setIsExpanded(false);
+        }
+    }, [showExpandButton])
+
     return (
         <>
             <TableRow {...otherProps}>

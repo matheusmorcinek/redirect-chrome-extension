@@ -4,10 +4,14 @@ import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import TextField from '@mui/material/TextField';
 import { searchType } from '../../constants/search.js'
+import { isRegexSupported } from '../../main';
+import Button from '../styled-mui-components/CustomButton/Button';
 
 const Condition = ({ condition, isEditMode, onChange, removed }) => {
 
     const [tempCondition, setTempCondition] = React.useState(condition);
+
+    const [regexTestResult, setRegexTestResult] = React.useState('');
 
     const handleSearchTypeChange = (event) => {
 
@@ -37,6 +41,7 @@ const Condition = ({ condition, isEditMode, onChange, removed }) => {
             }
         };
 
+        setRegexTestResult('');
         setTempCondition(updatedTempCondition);
         onChange(updatedTempCondition);
     };
@@ -56,6 +61,17 @@ const Condition = ({ condition, isEditMode, onChange, removed }) => {
         setTempCondition(updatedTempCondition);
         onChange(updatedTempCondition);
     };
+
+    const handleCheckRegexButtonClick = () => {
+
+        isRegexSupported(tempCondition.request.value).then(isSupported => {
+            if (isSupported) {
+                setRegexTestResult('Your pattern is valid ✔')
+            } else {
+                setRegexTestResult('Your pattern contains one or more errors 🚨')
+            }
+        });
+    }
 
     return (
         isEditMode ?
@@ -84,6 +100,13 @@ const Condition = ({ condition, isEditMode, onChange, removed }) => {
                         onChange={(event) => handleSearchValueChange(event)}
                     />
                 </div>
+                {
+                    tempCondition.request.search === 'REGEX' &&
+                    <div className={styles['condition-regex-test-container']}>
+                        <Button variant="text" size="small" onClick={() => handleCheckRegexButtonClick()}>🧪 Test RegEx</Button>
+                        <span>{regexTestResult}</span>
+                    </div>
+                }
                 <div className={styles['condition-container-row-two']}>
                     <span>Redirect to</span>
                     <TextField
