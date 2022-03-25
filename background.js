@@ -294,7 +294,7 @@ const onBeforeCallback = (details) => {
 
     chrome.storage.sync.get(["networkUrlFilters"], function (items) {
 
-        console.log('onBeforeCallback items '.items);
+        console.log('@ inner get onBeforeCallback networkUrlFilters ', items);
 
         const { networkUrlFilters } = items;
 
@@ -345,12 +345,12 @@ const removeRuleNotificationListeners = () => {
 
 const prepareRuleNotifications = (rules) => {
 
-    console.log('prepareNotificationListeners')
+    console.log('prepareNotificationListeners v2', rules)
     removeRuleNotificationListeners();
 
     chrome.storage.sync.set({ "ruleUrlOccurrences": null });
 
-    let urls = [];
+    let filterUrls = [];
 
     const ruleUrlOccurrences = rules.reduce((urls, rule) => {
 
@@ -358,9 +358,10 @@ const prepareRuleNotifications = (rules) => {
 
             rule.conditions.forEach(condition => {
 
+                filterUrls.push(condition.request.redirect);
+                
                 if (urls[condition.request.redirect]) {
 
-                    networkUrls.push(condition.request.redirect);
                     urls[condition.request.redirect].push(rule.name)
                     return;
                 }
@@ -371,10 +372,14 @@ const prepareRuleNotifications = (rules) => {
         return urls;
     }, {});
 
+    console.log('@@@@ ruleUrlOccurrences', ruleUrlOccurrences)
+    console.log('@@@@ urls', filterUrls)
+
     chrome.storage.sync.set({ "ruleUrlOccurrences": ruleUrlOccurrences });
 
+    //  todo FAILING WITH HTTPS
     const networkFilters = {
-        urls: urls
+        urls: ['http://localhost:3000/favicon.ico']
     };
 
     chrome.webRequest.onBeforeRedirect.addListener(onBeforeCallback, networkFilters);
