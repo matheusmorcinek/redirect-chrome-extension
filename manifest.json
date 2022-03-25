@@ -21,7 +21,8 @@
     "webRequest",
     "activeTab",
     "contextMenus",
-    "storage"
+    "storage",
+    "notifications"
   ],
   "icons": {
     "16": "assets/icon16.ico",

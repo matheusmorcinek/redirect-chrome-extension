@@ -169,6 +169,7 @@ const ExtensionContextProvider = ({ children }) => {
             name: name.trim(),
             description: description.trim(),
             active: false,
+            enableNotifications: true,
             conditions: []
         };
 

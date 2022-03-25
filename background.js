@@ -4,93 +4,6 @@
 
 console.log('background js running!');
 
-// chrome.action.setIcon({path: "images/iconWorking.png"}, () => { console.log('changed icon!!!') });
-
-chrome.webNavigation.onCompleted.addListener(function () {
-    console.log("This is my favorite website!");
-}, { url: [{ urlMatches: 'https://www.google.com/' }] });
-
-
-// chrome.webRequest.onBeforeRedirect.addListener(function () {
-//     console.log("This is the new icon!!!");
-// }, { url: [{ urlMatches: 'http://localhost:3000/faviconRedirected.ico' }] });
-
-// chrome.webRequest.onBeforeRedirect.addListener(
-//     function () {
-//         console.log("This a request is the new icon!!!");
-//     },
-//     { urls: ['http://localhost:3000/faviconRedirected.ico'] }
-// )
-
-const networkFilters = {
-    urls: [
-        "http://localhost:3000/faviconRedirected.ico",
-        "https://www.google.com/"
-    ]
-};
-
-const setDefaultIcon = () => {
-
-    chrome.storage.sync.get(["timeoutId"], function (items) {
-
-        const { timeoutId } = items;
-
-        console.log('get timeoutId ', timeoutId)
-
-        if (timeoutId) {
-
-            clearTimeout(timeoutId);
-            chrome.storage.sync.set({ "timeoutId": null }, function () {
-                console.log('clearTimeout')
-            });
-        }
-
-        const timeoutIdentification = setTimeout(() => {
-            chrome.action.setIcon({ path: "images/icon32.png" }, () => { console.log('changed to default icon!!!') });
-        }, 5000);
-
-        chrome.storage.sync.set({ "timeoutId": timeoutIdentification }, function () {
-            console.log('saved new timeoutid')
-        });
-    });
-}
-
-// chrome.storage.sync.set({ "yourBody": "myBody" }, function(){
-//    console.log('yes saved')
-// });
-
-// chrome.storage.sync.get(/* String or Array */["yourBody"], function(items){
-//     //  items = [ { "yourBody": "myBody" } ]
-//     console.log('the items ', items)
-// });
-
-
-chrome.webRequest.onBeforeRequest.addListener((details) => {
-
-    chrome.action.setIcon({ path: "images/iconWorking.png" }, () => { console.log('changed icon!!!') });
-    setDefaultIcon();
-
-
-    console.log('chegou aqui !!!! ', details)
-
-    // {
-    //     "frameId": 0,
-    //     "initiator": "http://localhost:3000",
-    //     "method": "GET",
-    //     "parentFrameId": -1,
-    //     "requestId": "20610",
-    //     "tabId": 1171,
-    //     "timeStamp": 1648163965613.8142,
-    //     "type": "image",
-    //     "url": "http://localhost:3000/faviconRedirected.ico"
-    // }
-
-}, networkFilters);
-
-
-//TODO https://gilfink.medium.com/adding-web-interception-abilities-to-your-chrome-extension-fb42366df425
-//https://developer.chrome.com/docs/extensions/reference/webRequest/#event-onBeforeRedirect
-
 const extensionButtonClicked = (tab) => {
     console.log('Redirect Network Chrome Extension - button clicked');
 
@@ -134,147 +47,45 @@ chrome.action.onClicked.addListener(tab => extensionButtonClicked(tab));
 //     )
 // })
 
-setInterval(() => {
-
-
-    // console.log('testing regex')
-
-    // chrome.declarativeNetRequest.isRegexSupported(
-    //     {
-    //         regex: '^http://localhost:(.*)'
-    //     },
-    //     (result) => {
-    //         console.log('isRegexSupported resultado ', result)
-    //     }
-    // )
-
-    // {
-    //     "isSupported": true
-    // }
-
-
-    // chrome.storage.sync.get(null, function(items) {
-    //     var allKeys = Object.keys(items);
-    //     console.log(allKeys);
-    // });
-
-    chrome.storage.sync.get(/* String or Array */["rules"], function (items) {
-        //  items = [ { "yourBody": "myBody" } ]
-        console.log(' ')
-        console.log('getting storage rules on background, rules: ', items)
-    });
-
-
-    console.log('declarative net rules');
-    chrome.declarativeNetRequest.getDynamicRules(rules => {
-        console.log('chrome dynamic rules ', rules)
-    })
-
-}, 5000);
-
+//INTERVAL
 // setInterval(() => {
 
-//     console.log(' ')
-//     chrome.storage.sync.get(/* String or Array */["rule"], function(items){
+
+//     // console.log('testing regex')
+
+//     // chrome.declarativeNetRequest.isRegexSupported(
+//     //     {
+//     //         regex: '^http://localhost:(.*)'
+//     //     },
+//     //     (result) => {
+//     //         console.log('isRegexSupported resultado ', result)
+//     //     }
+//     // )
+
+//     // {
+//     //     "isSupported": true
+//     // }
+
+
+//     // chrome.storage.sync.get(null, function(items) {
+//     //     var allKeys = Object.keys(items);
+//     //     console.log(allKeys);
+//     // });
+
+//     chrome.storage.sync.get(/* String or Array */["rules"], function (items) {
 //         //  items = [ { "yourBody": "myBody" } ]
-//         console.log('get rule on background, rule: ', items)
+//         console.log(' ')
+//         console.log('getting storage rules on background, rules: ', items)
 //     });
 
-// }, 2000);
 
-// chrome.storage.sync.get(null, function(items) {
-//     var allKeys = Object.keys(items);
-//     console.log(allKeys);
-// });
+//     console.log('declarative net rules');
+//     chrome.declarativeNetRequest.getDynamicRules(rules => {
+//         console.log('chrome dynamic rules ', rules)
+//     })
 
-// chrome.webRequest.onBeforeRequest.addListener(
-//     function (details) {
-//         console.log('details ', details)
-//     },
-//     { urls: ["<all_urls>"] },
-//     ["requestBody"]
-// );
+// }, 5000);
 
-// var callback = function (details) {
-//     console.log("details ", details);
-// };
-// var filter = {urls: ["<all_urls>"]};
-// var opt_extraInfoSpec = [];
-
-// chrome.webRequest.onBeforeRequest.addListener(
-//     callback, filter, opt_extraInfoSpec);
-
-// (function() {
-//     const tabStorage = {};
-//     const networkFilters = {
-//         urls: [
-//             "*://developer.mozilla.org/*"
-//         ]
-//     };
-
-//     chrome.webRequest.onBeforeRequest.addListener((details) => {
-//         const { tabId, requestId } = details;
-//         if (!tabStorage.hasOwnProperty(tabId)) {
-//             return;
-//         }
-
-//         tabStorage[tabId].requests[requestId] = {
-//             requestId: requestId,
-//             url: details.url,
-//             startTime: details.timeStamp,
-//             status: 'pending'
-//         };
-//         console.log(tabStorage[tabId].requests[requestId]);
-//     }, networkFilters);
-
-//     chrome.webRequest.onCompleted.addListener((details) => {
-//         const { tabId, requestId } = details;
-//         if (!tabStorage.hasOwnProperty(tabId) || !tabStorage[tabId].requests.hasOwnProperty(requestId)) {
-//             return;
-//         }
-
-//         const request = tabStorage[tabId].requests[requestId];
-
-//         Object.assign(request, {
-//             endTime: details.timeStamp,
-//             requestDuration: details.timeStamp - request.startTime,
-//             status: 'complete'
-//         });
-//         console.log(tabStorage[tabId].requests[details.requestId]);
-//     }, networkFilters);
-
-//     chrome.webRequest.onErrorOccurred.addListener((details)=> {
-//         const { tabId, requestId } = details;
-//         if (!tabStorage.hasOwnProperty(tabId) || !tabStorage[tabId].requests.hasOwnProperty(requestId)) {
-//             return;
-//         }
-
-//         const request = tabStorage[tabId].requests[requestId];
-//         Object.assign(request, {
-//             endTime: details.timeStamp,           
-//             status: 'error',
-//         });
-//         console.log(tabStorage[tabId].requests[requestId]);
-//     }, networkFilters);
-
-//     chrome.tabs.onActivated.addListener((tab) => {
-//         const tabId = tab ? tab.tabId : chrome.tabs.TAB_ID_NONE;
-//         if (!tabStorage.hasOwnProperty(tabId)) {
-//             tabStorage[tabId] = {
-//                 id: tabId,
-//                 requests: {},
-//                 registerTime: new Date().getTime()
-//             };
-//         }
-//     });
-//     chrome.tabs.onRemoved.addListener((tab) => {
-//         const tabId = tab.tabId;
-//         if (!tabStorage.hasOwnProperty(tabId)) {
-//             return;
-//         }
-//         tabStorage[tabId] = null;
-//     });
-// }());
 
 const removeAllDynamicRules = () => {
 
@@ -294,7 +105,6 @@ const removeAllDynamicRules = () => {
                     removeRuleIds: ids
                 },
                 () => {
-                    console.log('chrome dynamic rules has been removed')
                     resolve();
                 }
             );
@@ -322,10 +132,13 @@ const resourceTypes = [
 const updateChromeDynamicRules = () => {
 
     removeAllDynamicRules().then(() => {
-        console.log('removeAllDynamicRules completed!')
 
         chrome.storage.sync.get(["rules"], function (data) {
             const { rules } = data;
+
+            console.log('rules @@@@@@ ', rules);
+
+            prepareRuleNotifications(rules);
 
             const activeConditions = rules.reduce((activeConditions, rule) => {
                 if (rule.active) {
@@ -333,8 +146,6 @@ const updateChromeDynamicRules = () => {
                 }
                 return activeConditions
             }, []);
-
-            console.log('active conditions ', activeConditions);
 
             const dynamicRules = activeConditions.map((condition, index) => {
 
@@ -382,12 +193,202 @@ const updateChromeDynamicRules = () => {
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
-    if (request.type == "notification") {
-        console.log('[background] received notification! ', request.options);
+    if (request.type == "rules-update-notification") {
         updateChromeDynamicRules();
-        // chrome.notifications.create('worktimer-notification', request.options, function () { });
     }
-
     sendResponse();
 });
+
+
+
+//notifications
+
+
+// const pushNotification = () => {
+
+//     chrome.notifications.create(
+//         {
+//             title: 'Redirect Request Chrome Extension',
+//             message: 'LetXPath got an update!',
+//             iconUrl: 'images/icon32.png',
+//             type: 'basic'
+//         }
+//     )
+
+//     setTimeout(() => {
+
+//         // chrome.webNavigation.onCompleted.removeListener(pushNotification, webNavigationOnCompletedOptions)
+//         chrome.webNavigation.onCompleted.removeListener(pushNotification)
+//         // chrome.webNavigation.onCompleted.removeListener();
+//     }, 2000);
+// };
+
+// const webNavigationOnCompletedOptions = { url: [{ urlMatches: 'https://www.google.com/' }] };
+
+// chrome.webNavigation.onCompleted.addListener(pushNotification, webNavigationOnCompletedOptions);
+
+
+
+//requests
+
+
+
+
+
+// chrome.webRequest.onBeforeRequest.addListener((details) => {
+
+//     chrome.action.setIcon({ path: "images/iconWorking.png" }, () => { console.log('changed icon!!!') });
+//     setDefaultIcon();
+
+
+//     console.log('chegou aqui !!!! ', details)
+
+//     // {
+//     //     "frameId": 0,
+//     //     "initiator": "http://localhost:3000",
+//     //     "method": "GET",
+//     //     "parentFrameId": -1,
+//     //     "requestId": "20610",
+//     //     "tabId": 1171,
+//     //     "timeStamp": 1648163965613.8142,
+//     //     "type": "image",
+//     //     "url": "http://localhost:3000/faviconRedirected.ico"
+//     // }
+
+// }, networkFilters);
+
+const setDefaultIcon = () => {
+
+    chrome.storage.sync.get(["timeoutId"], function (items) {
+
+        const { timeoutId } = items;
+
+        if (timeoutId) {
+
+            clearTimeout(timeoutId);
+            chrome.storage.sync.set({ "timeoutId": null }, function () {
+                console.log('clearTimeout')
+            });
+        }
+
+        const timeoutIdentification = setTimeout(() => {
+            chrome.action.setIcon({ path: "images/icon32.png" }, () => { console.log('changed to default icon!!!') });
+        }, 5000);
+
+        chrome.storage.sync.set({ "timeoutId": timeoutIdentification }, function () {
+            console.log('saved new timeoutid')
+        });
+    });
+}
+
+
+// TODO doing notification logic
+
+const onBeforeCallback = (details) => {
+
+    console.log('@@@@@ onBeforeCallback ', details)
+
+    //verificar se nao precisa chegar se o redirect é da extansao, ou se triga em qualquer redirect
+    chrome.action.setIcon({ path: "images/iconWorking.png" }, () => { console.log('changed icon!!!') });
+    setDefaultIcon();
+
+    chrome.storage.sync.get(["networkUrlFilters"], function (items) {
+
+        console.log('onBeforeCallback items '.items);
+
+        const { networkUrlFilters } = items;
+
+        if (networkUrlFilters[details.redirectUrl]) {
+            pushNotification(networkUrlFilters[details.redirectUrl])
+        }
+    });
+
+};
+
+
+const pushNotification = (rules) => {
+
+    console.log('pushNotification')
+
+    const organizeRulesText = () => rules.reduce((msg, rule, index) => {
+        if (index === 0) {
+            return rule
+        }
+        return `${msg}, ${rule}`
+    }, '');
+
+    const message = `${rules.length > 0 ?
+        `Redirection working for the following active rules: ${organizeRulesText()}` :
+        `Redirection working for rule ${rules[0]}`}`
+
+    chrome.notifications.create(
+        {
+            title: 'Redirect Request Chrome Extension',
+            message: message,
+            iconUrl: 'images/icon32.png',
+            type: 'basic'
+        }
+    )
+
+    // setTimeout(() => {
+
+    //     // chrome.webNavigation.onCompleted.removeListener(pushNotification, webNavigationOnCompletedOptions)
+    //     chrome.webNavigation.onCompleted.removeListener(pushNotification)
+    //     // chrome.webNavigation.onCompleted.removeListener();
+    // }, 2000);
+};
+
+
+const removeRuleNotificationListeners = () => {
+    chrome.webRequest.onBeforeRedirect.removeListener(onBeforeCallback)
+}
+
+const prepareRuleNotifications = (rules) => {
+
+    console.log('prepareNotificationListeners')
+    removeRuleNotificationListeners();
+
+    chrome.storage.sync.set({ "ruleUrlOccurrences": null });
+
+    let urls = [];
+
+    const ruleUrlOccurrences = rules.reduce((urls, rule) => {
+
+        if (rule.enableNotifications) {
+
+            rule.conditions.forEach(condition => {
+
+                if (urls[condition.request.redirect]) {
+
+                    networkUrls.push(condition.request.redirect);
+                    urls[condition.request.redirect].push(rule.name)
+                    return;
+                }
+                urls[condition.request.redirect] = [rule.name];
+            });
+        }
+
+        return urls;
+    }, {});
+
+    chrome.storage.sync.set({ "ruleUrlOccurrences": ruleUrlOccurrences });
+
+    const networkFilters = {
+        urls: urls
+    };
+
+    chrome.webRequest.onBeforeRedirect.addListener(onBeforeCallback, networkFilters);
+}
+
+
+(() => {
+    console.log('setup script')
+
+    removeRuleNotificationListeners();
+    chrome.storage.sync.get(["rules"], function (data) {
+        const { rules } = data;
+        prepareRuleNotifications(rules);
+    });
+})();
+
 

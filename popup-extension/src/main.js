@@ -54,12 +54,13 @@ export const getRulesSyncData = () => {
 
 const notifyChromeBackgroundScript = () => {
     chrome.runtime.sendMessage({
-        type: "notification", options: {
-            type: "basic",
-            // iconUrl: chrome.extension.getURL("icon128.png"),
-            title: "Test",
-            message: "Test"
-        }
+        type: "rules-update-notification",
+        // options: {
+        //     type: "basic",
+        //     // iconUrl: chrome.extension.getURL("icon128.png"),
+        //     title: "Test",
+        //     message: "Test"
+        // }
     });
 }
 
