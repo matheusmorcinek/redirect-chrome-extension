@@ -4,6 +4,8 @@
 
 console.log('background js running!');
 
+// chrome.action.setIcon({path: "images/iconWorking.png"}, () => { console.log('changed icon!!!') });
+
 chrome.webNavigation.onCompleted.addListener(function () {
     console.log("This is my favorite website!");
 }, { url: [{ urlMatches: 'https://www.google.com/' }] });
@@ -27,19 +29,47 @@ const networkFilters = {
     ]
 };
 
-chrome.webRequest.onBeforeRequest.addListener((details) => {
-    // const { tabId, requestId } = details;
-    // if (!tabStorage.hasOwnProperty(tabId)) {
-    //     return;
-    // }
+const setDefaultIcon = () => {
 
-    // tabStorage[tabId].requests[requestId] = {
-    //     requestId: requestId,
-    //     url: details.url,
-    //     startTime: details.timeStamp,
-    //     status: 'pending'
-    // };
-    // console.log(tabStorage[tabId].requests[requestId]);
+    chrome.storage.sync.get(["timeoutId"], function (items) {
+
+        const { timeoutId } = items;
+
+        console.log('get timeoutId ', timeoutId)
+
+        if (timeoutId) {
+
+            clearTimeout(timeoutId);
+            chrome.storage.sync.set({ "timeoutId": null }, function () {
+                console.log('clearTimeout')
+            });
+        }
+
+        const timeoutIdentification = setTimeout(() => {
+            chrome.action.setIcon({ path: "images/icon32.png" }, () => { console.log('changed to default icon!!!') });
+        }, 5000);
+
+        chrome.storage.sync.set({ "timeoutId": timeoutIdentification }, function () {
+            console.log('saved new timeoutid')
+        });
+    });
+}
+
+// chrome.storage.sync.set({ "yourBody": "myBody" }, function(){
+//    console.log('yes saved')
+// });
+
+// chrome.storage.sync.get(/* String or Array */["yourBody"], function(items){
+//     //  items = [ { "yourBody": "myBody" } ]
+//     console.log('the items ', items)
+// });
+
+
+chrome.webRequest.onBeforeRequest.addListener((details) => {
+
+    chrome.action.setIcon({ path: "images/iconWorking.png" }, () => { console.log('changed icon!!!') });
+    setDefaultIcon();
+
 
     console.log('chegou aqui !!!! ', details)
 
