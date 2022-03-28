@@ -1,91 +1,4 @@
-//background script is a code that runs when you lunch chrome, and is listening everything about the browser e.g open a new tab
-
-//ler documentação chrome.webRequest https://developer.chrome.com/docs/extensions/reference/webRequest/
-
 console.log('background js running!');
-
-const extensionButtonClicked = (tab) => {
-    console.log('Redirect Network Chrome Extension - button clicked');
-
-    console.log('tab ', tab)
-    let message = {
-        text: 'hello'
-    };
-    chrome.tabs.sendMessage(tab.id, message);
-};
-
-chrome.action.onClicked.addListener(tab => extensionButtonClicked(tab));
-
-
-// chrome.storage.sync.set({ "yourBody": "myBody" }, function(){
-//    console.log('yes saved')
-// });
-
-// chrome.storage.sync.get(/* String or Array */["yourBody"], function(items){
-//     //  items = [ { "yourBody": "myBody" } ]
-//     console.log('the items ', items)
-// });
-
-// chrome.storage.sync.get(/* String or Array */["rule"], function(items){
-//     //  items = [ { "yourBody": "myBody" } ]
-//     console.log('get rule on background, rule: ', items)
-// });
-
-// ADDICIONAR URL COM declarativeNetRequest
-// blockUrls.forEach((domain, index) => {
-//     let id = index + 1;
-
-//     chrome.declarativeNetRequest.updateDynamicRules(
-//        {addRules:[{
-//           "id": id,
-//           "priority": 1,
-//           "action": { "type": "block" },
-//           "condition": {"urlFilter": domain, "resourceTypes": ["main_frame"] }}
-//          ],
-//          removeRuleIds: [id]
-//        },
-//     )
-// })
-
-//INTERVAL
-// setInterval(() => {
-
-
-//     // console.log('testing regex')
-
-//     // chrome.declarativeNetRequest.isRegexSupported(
-//     //     {
-//     //         regex: '^http://localhost:(.*)'
-//     //     },
-//     //     (result) => {
-//     //         console.log('isRegexSupported resultado ', result)
-//     //     }
-//     // )
-
-//     // {
-//     //     "isSupported": true
-//     // }
-
-
-//     // chrome.storage.sync.get(null, function(items) {
-//     //     var allKeys = Object.keys(items);
-//     //     console.log(allKeys);
-//     // });
-
-//     chrome.storage.sync.get(/* String or Array */["rules"], function (items) {
-//         //  items = [ { "yourBody": "myBody" } ]
-//         console.log(' ')
-//         console.log('getting storage rules on background, rules: ', items)
-//     });
-
-
-//     console.log('declarative net rules');
-//     chrome.declarativeNetRequest.getDynamicRules(rules => {
-//         console.log('chrome dynamic rules ', rules)
-//     })
-
-// }, 5000);
-
 
 const removeAllDynamicRules = () => {
 
@@ -135,8 +48,6 @@ const updateChromeDynamicRules = () => {
 
         chrome.storage.sync.get(["rules"], function (data) {
             const { rules } = data;
-
-            console.log('rules @@@@@@ ', rules);
 
             prepareRuleNotifications(rules);
 
@@ -199,64 +110,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
     sendResponse();
 });
 
-
-
-//notifications
-
-
-// const pushNotification = () => {
-
-//     chrome.notifications.create(
-//         {
-//             title: 'Redirect Request Chrome Extension',
-//             message: 'LetXPath got an update!',
-//             iconUrl: 'images/icon32.png',
-//             type: 'basic'
-//         }
-//     )
-
-//     setTimeout(() => {
-
-//         // chrome.webNavigation.onCompleted.removeListener(pushNotification, webNavigationOnCompletedOptions)
-//         chrome.webNavigation.onCompleted.removeListener(pushNotification)
-//         // chrome.webNavigation.onCompleted.removeListener();
-//     }, 2000);
-// };
-
-// const webNavigationOnCompletedOptions = { url: [{ urlMatches: 'https://www.google.com/' }] };
-
-// chrome.webNavigation.onCompleted.addListener(pushNotification, webNavigationOnCompletedOptions);
-
-
-
-//requests
-
-
-
-
-
-// chrome.webRequest.onBeforeRequest.addListener((details) => {
-
-//     chrome.action.setIcon({ path: "images/iconWorking.png" }, () => { console.log('changed icon!!!') });
-//     setDefaultIcon();
-
-
-//     console.log('chegou aqui !!!! ', details)
-
-//     // {
-//     //     "frameId": 0,
-//     //     "initiator": "http://localhost:3000",
-//     //     "method": "GET",
-//     //     "parentFrameId": -1,
-//     //     "requestId": "20610",
-//     //     "tabId": 1171,
-//     //     "timeStamp": 1648163965613.8142,
-//     //     "type": "image",
-//     //     "url": "http://localhost:3000/faviconRedirected.ico"
-//     // }
-
-// }, networkFilters);
-
 const setDefaultIcon = () => {
 
     chrome.storage.sync.get(["timeoutId"], function (items) {
@@ -281,25 +134,22 @@ const setDefaultIcon = () => {
     });
 }
 
-
-// TODO doing notification logic
-
 const onBeforeCallback = (details) => {
 
-    console.log('@@@@@ onBeforeCallback ', details)
+    chrome.storage.sync.get(["ruleUrlOccurrences"], function (items) {
 
-    //verificar se nao precisa chegar se o redirect é da extansao, ou se triga em qualquer redirect
-    chrome.action.setIcon({ path: "images/iconWorking.png" }, () => { console.log('changed icon!!!') });
-    setDefaultIcon();
+        const { ruleUrlOccurrences } = items;
 
-    chrome.storage.sync.get(["networkUrlFilters"], function (items) {
+        const redirectUrl = details.redirectUrl.charAt(details.redirectUrl.length - 1) === '/' ?
+            details.redirectUrl.slice(0, details.redirectUrl.length - 1) :
+            details.redirectUrl;
 
-        console.log('@ inner get onBeforeCallback networkUrlFilters ', items);
+        if (ruleUrlOccurrences[redirectUrl]) {
 
-        const { networkUrlFilters } = items;
+            chrome.action.setIcon({ path: "images/iconWorking.png" }, () => { console.log('changed icon!!!') });
+            setDefaultIcon();
 
-        if (networkUrlFilters[details.redirectUrl]) {
-            pushNotification(networkUrlFilters[details.redirectUrl])
+            pushNotification(ruleUrlOccurrences[redirectUrl])
         }
     });
 
@@ -338,19 +188,19 @@ const pushNotification = (rules) => {
     // }, 2000);
 };
 
-
 const removeRuleNotificationListeners = () => {
     chrome.webRequest.onBeforeRedirect.removeListener(onBeforeCallback)
 }
 
 const prepareRuleNotifications = (rules) => {
 
-    console.log('prepareNotificationListeners v2', rules)
+    if (!rules) {
+        return;
+    }
+
     removeRuleNotificationListeners();
 
     chrome.storage.sync.set({ "ruleUrlOccurrences": null });
-
-    let filterUrls = [];
 
     const ruleUrlOccurrences = rules.reduce((urls, rule) => {
 
@@ -358,36 +208,45 @@ const prepareRuleNotifications = (rules) => {
 
             rule.conditions.forEach(condition => {
 
-                filterUrls.push(condition.request.redirect);
-                
-                if (urls[condition.request.redirect]) {
-
-                    urls[condition.request.redirect].push(rule.name)
+                if (!condition.request.redirect) {
                     return;
                 }
-                urls[condition.request.redirect] = [rule.name];
+
+                const url = condition.request.redirect.charAt(condition.request.redirect.length - 1) === '/' ?
+                    condition.request.redirect.slice(0, condition.request.redirect.length - 1) :
+                    condition.request.redirect;
+
+                if (urls[url]) {
+
+                    urls[url].push(rule.name);
+                    return;
+                }
+                urls[url] = [rule.name];
             });
         }
 
         return urls;
     }, {});
 
-    console.log('@@@@ ruleUrlOccurrences', ruleUrlOccurrences)
-    console.log('@@@@ urls', filterUrls)
-
     chrome.storage.sync.set({ "ruleUrlOccurrences": ruleUrlOccurrences });
 
-    //  todo FAILING WITH HTTPS
+    console.log('@@@ prepareRuleNotifications')
+    console.log('@@@ ruleUrlOccurrences ', ruleUrlOccurrences)
+
+    //https://developer.chrome.com/docs/extensions/mv3/match_patterns/
+    // const networkFilters = {
+    //     urls: ['<all_urls>']
+    // };
+
     const networkFilters = {
-        urls: ['http://localhost:3000/favicon.ico']
+        urls: ['<all_urls>']
     };
 
     chrome.webRequest.onBeforeRedirect.addListener(onBeforeCallback, networkFilters);
 }
 
-
 (() => {
-    console.log('setup script')
+    console.log('background setup')
 
     removeRuleNotificationListeners();
     chrome.storage.sync.get(["rules"], function (data) {
@@ -396,4 +255,8 @@ const prepareRuleNotifications = (rules) => {
     });
 })();
 
+//Unchecked runtime.lastError: Rule with id 2 does not provide a valid URL for action.redirect.url key.
+//adicionar lib e validação no form
 
+
+//TODO bug angular.io corsAccess to fetch at 'https://reactjs.org/' (redirected from 'https://www.google-analytics.com/j/collect?v=1&_v=j96&a=1678469577&t=pageview&_s=1&dl=https%3A%2F%2Fangular.io%2F&dp=%2F&ul=en-us&de=UTF-8&dt=Angular&sd=24-bit&sr=1') from origin 'https://angular.io' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
