@@ -1,38 +1,11 @@
 /*global chrome*/
 
-export const hello = () => {
-    alert('Hello from main script inside react app')
-}
-
-// export const saveRule = () => {
-//     const key = 'rule';
-//     const value = { value: 'some redirect value' };
-
-//     chrome.storage.sync.set({ "rule": value }, () => {
-//         alert('Stored name: ' + value.value);
-//     });
-// }
-
-// chrome.storage.sync.remove("rules", () => {
-//     console.log('rules has been removed');
-// })
-
-// export const getRules = () => {
-//     return chrome.storage.sync.get(["rules"], (data) => {
-
-//         console.log('get rules')
-
-//         const { rules } = data;
-//         return rules;
-//     });
-// }
-
 export const getRulesSyncData = () => {
-    // Immediately return a promise and start asynchronous work
+
     return new Promise((resolve, reject) => {
-        // Asynchronously fetch all data from storage.sync.
+
         chrome.storage.sync.get(["rules"], (data) => {
-            // Pass any observed errors down the promise chain.
+
             if (chrome.runtime.lastError) {
                 return reject(chrome.runtime.lastError);
             }
@@ -45,12 +18,10 @@ export const getRulesSyncData = () => {
                 resolve([]);
             }
 
-            // Pass the data retrieved from storage down the promise chain.
             resolve(rules);
         });
     });
 }
-
 
 const notifyChromeBackgroundScript = () => {
     chrome.runtime.sendMessage({
@@ -75,12 +46,7 @@ export const updateChromeStorageRules = (rules) => {
 
 export const addNewRule = (rule) => {
 
-    console.log(' ')
-    console.log('inside main script 2')
-
     chrome.storage.sync.get(["rules"], (data) => {
-
-        console.log('get rules on the main, rules: ', data)
 
         const { rules } = data;
 
@@ -95,30 +61,6 @@ export const addNewRule = (rule) => {
             console.log('new rule has been saved!');
         });
     });
-
-    // chrome.declarativeNetRequest.updateDynamicRules(
-    //     {
-    //         addRules: [{
-    //             "id": 1,
-    //             "priority": 1,
-    //             "action": { "type": "block" },
-    //             "condition": { "urlFilter": "googletest.com", "resourceTypes": ["main_frame"] }
-    //         }
-    //         ]
-    //     },
-    // )
-    // chrome.declarativeNetRequest.updateDynamicRules(
-    //     {
-    //         addRules: [{
-    //             "id": 1,
-    //             "priority": 1,
-    //             "action": { "type": "block" },
-    //             "condition": { "urlFilter": "googletest.com", "resourceTypes": ["main_frame"] }
-    //         }
-    //         ]
-    //     },
-    // )
-
 };
 
 export const isRegexSupported = (regex) => {
@@ -140,7 +82,6 @@ export const isRegexSupported = (regex) => {
         )
     });
 }
-
 
 //resourceType https://developer.chrome.com/docs/extensions/reference/declarativeNetRequest/#type-ResourceType
 

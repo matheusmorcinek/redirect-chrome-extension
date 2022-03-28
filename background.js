@@ -158,8 +158,6 @@ const onBeforeCallback = (details) => {
 
 const pushNotification = (rules) => {
 
-    console.log('pushNotification')
-
     const organizeRulesText = () => rules.reduce((msg, rule, index) => {
         if (index === 0) {
             return rule
@@ -179,13 +177,6 @@ const pushNotification = (rules) => {
             type: 'basic'
         }
     )
-
-    // setTimeout(() => {
-
-    //     // chrome.webNavigation.onCompleted.removeListener(pushNotification, webNavigationOnCompletedOptions)
-    //     chrome.webNavigation.onCompleted.removeListener(pushNotification)
-    //     // chrome.webNavigation.onCompleted.removeListener();
-    // }, 2000);
 };
 
 const removeRuleNotificationListeners = () => {
@@ -230,14 +221,7 @@ const prepareRuleNotifications = (rules) => {
 
     chrome.storage.sync.set({ "ruleUrlOccurrences": ruleUrlOccurrences });
 
-    console.log('@@@ prepareRuleNotifications')
-    console.log('@@@ ruleUrlOccurrences ', ruleUrlOccurrences)
-
     //https://developer.chrome.com/docs/extensions/mv3/match_patterns/
-    // const networkFilters = {
-    //     urls: ['<all_urls>']
-    // };
-
     const networkFilters = {
         urls: ['<all_urls>']
     };
