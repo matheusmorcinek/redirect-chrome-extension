@@ -58,28 +58,44 @@ const updateChromeDynamicRules = () => {
                 return activeConditions
             }, []);
 
+            console.log('[updateChromeDynamicRules] activeConditions', activeConditions);
+
             const dynamicRules = activeConditions.map((condition, index) => {
 
                 const id = index + 1;
 
                 const dynamicRule = {
                     id: id,
-                    priority: 1,
-                    action: {
-                        type: "redirect",
-                        redirect: {
-                            url: condition.request.redirect
-                        }
-                    }
+                    priority: 1
                 };
 
+                //TODO regex nao funcionando 
+                //nem quando redireciona com parametro
+
+                //ler exemplos https://developer.chrome.com/docs/extensions/reference/declarativeNetRequest/
+                //https://stackoverflow.com/questions/66810459/chrome-extension-insert-a-user-input-string-into-multiple-declarativenetrequest
+
                 if (condition.request.search === 'EQUALS' || condition.request.search === 'CONTAINS') {
+
+                    dynamicRule.action = {
+                        type: "redirect",
+                        redirect: {
+                            url: condition.request.redirect,
+                        }
+                    }
 
                     dynamicRule.condition = {
                         urlFilter: condition.request.value,
                         resourceTypes: resourceTypes
                     }
                 } else {
+
+                    dynamicRule.action = {
+                        type: "redirect",
+                        redirect: {
+                            regexSubstitution: String.raw`${condition.request.redirect}`.replace('$', '\\'),
+                        }
+                    }
 
                     dynamicRule.condition = {
                         regexFilter: condition.request.value,
@@ -89,6 +105,8 @@ const updateChromeDynamicRules = () => {
 
                 return dynamicRule;
             });
+
+            console.log('[updateChromeDynamicRules] dynamicRules', dynamicRules);
 
             chrome.declarativeNetRequest.updateDynamicRules(
                 {
@@ -136,6 +154,8 @@ const setDefaultIcon = () => {
 
 const onBeforeCallback = (details) => {
 
+    console.log('[onBeforeCallback] details ', details)
+
     chrome.storage.sync.get(["ruleUrlOccurrences"], function (items) {
 
         const { ruleUrlOccurrences } = items;
@@ -152,7 +172,6 @@ const onBeforeCallback = (details) => {
             pushNotification(ruleUrlOccurrences[redirectUrl])
         }
     });
-
 };
 
 
@@ -184,6 +203,9 @@ const removeRuleNotificationListeners = () => {
 }
 
 const prepareRuleNotifications = (rules) => {
+
+    console.log(' ')
+    console.log('[prepareRuleNotifications] ')
 
     if (!rules) {
         return;
@@ -219,6 +241,8 @@ const prepareRuleNotifications = (rules) => {
         return urls;
     }, {});
 
+    console.log('[prepareRuleNotifications] ruleUrlOccurrences', ruleUrlOccurrences)
+
     chrome.storage.sync.set({ "ruleUrlOccurrences": ruleUrlOccurrences });
 
     //https://developer.chrome.com/docs/extensions/mv3/match_patterns/
@@ -230,7 +254,7 @@ const prepareRuleNotifications = (rules) => {
 }
 
 (() => {
-    console.log('background setup')
+    console.log('background setup v2')
 
     removeRuleNotificationListeners();
     chrome.storage.sync.get(["rules"], function (data) {
