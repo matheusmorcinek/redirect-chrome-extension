@@ -1,11 +1,13 @@
-import React from 'react';
-import styles from './Condition.module.css';
-import Select from '@mui/material/Select';
+import HelpOutlineRoundedIcon from '@mui/icons-material/HelpOutlineRounded';
 import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
 import TextField from '@mui/material/TextField';
-import { searchType } from '../../constants/search.js'
+import Tooltip from '@mui/material/Tooltip';
+import React from 'react';
+import { searchType } from '../../constants/search.js';
 import { isRegexSupported } from '../../main';
 import Button from '../styled-mui-components/CustomButton/Button';
+import styles from './Condition.module.css';
 
 const Condition = ({ condition, isEditMode, onChange, removed }) => {
 
@@ -121,6 +123,12 @@ const Condition = ({ condition, isEditMode, onChange, removed }) => {
                         label={tempCondition.request.search === 'REGEX' ? 'RegEx' : ''}
                         onChange={(event) => handleSearchRedirectChange(event)}
                     />
+                    {
+                        tempCondition.request.search === 'REGEX' &&
+                        <Tooltip title="$ digits ($1 to $9) can be used to insert the corresponding capture groups. e.g: If request URL REGEX https://xyz.abc.com/abc/(.*) Redirect to http://localhost:3000/$1">
+                            <HelpOutlineRoundedIcon />
+                        </Tooltip>
+                    }
                 </div>
             </div>
             :

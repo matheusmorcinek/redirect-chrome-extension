@@ -4,8 +4,96 @@
     "priority": 1,
     "action": {
       "type": "redirect",
-      "redirect": { "url": "http://localhost:3000/faviconRedirected.ico" }
+      "redirect": { "url": "http://localhost:3001/faviconRedirected.ico" }
     },
-    "condition": { "urlFilter": "http://localhost:3000/favicon.ico", "resourceTypes": ["image"] }
+    "condition": {
+      "urlFilter": "http://localhost:3001/favicon.ico",
+      "resourceTypes": ["image"]
+    }
+  },
+  {
+    "id": 2,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": { "url": "http://google.com/" }
+    },
+    "condition": {
+      "urlFilter": "https://reactjs.org/",
+      "resourceTypes": [
+        "main_frame",
+        "sub_frame",
+        "stylesheet",
+        "script",
+        "image",
+        "font",
+        "object",
+        "xmlhttprequest",
+        "ping",
+        "csp_report",
+        "media",
+        "websocket",
+        "webtransport",
+        "webbundle"
+      ]
+    }
+  },
+  {
+    "id": 3,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "regexSubstitution": "http://localhost:3000/static\\1"
+      }
+    },
+    "condition": {
+      "regexFilter": ".*hpsmartpie.cso-hp.com\/static(.*)",
+      "resourceTypes": [
+        "main_frame",
+        "sub_frame",
+        "stylesheet",
+        "script",
+        "image",
+        "font",
+        "object",
+        "xmlhttprequest",
+        "ping",
+        "csp_report",
+        "media",
+        "websocket",
+        "webtransport",
+        "webbundle"
+      ]
+    }
+  },
+  {
+    "id": 4,
+    "priority": 1,
+    "action": {
+      "type": "redirect",
+      "redirect": {
+        "regexSubstitution": "http://localhost:3000/\\1"
+      }
+    },
+    "condition": {
+      "regexFilter": "https://assets-pie1.instantink.com/comfe/(.*)",
+      "resourceTypes": [
+        "main_frame",
+        "sub_frame",
+        "stylesheet",
+        "script",
+        "image",
+        "font",
+        "object",
+        "xmlhttprequest",
+        "ping",
+        "csp_report",
+        "media",
+        "websocket",
+        "webtransport",
+        "webbundle"
+      ]
+    }
   }
 ]

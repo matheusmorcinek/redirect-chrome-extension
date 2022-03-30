@@ -1,0 +1,82 @@
+const rulesMock = [{
+    id: 1647457428206,
+    name: 'project 1',
+    description: 'mfe dev environment',
+    active: true,
+    conditions: [
+        {
+            id: 101,
+            request: {
+                value: 'google.com',
+                search: 'REGEX',
+                redirect: 'something.com'
+            }
+        },
+        {
+            id: 102,
+            request: {
+                value: 'facebook.com',
+                search: 'EQUALS',
+                redirect: 'ban.com'
+            }
+        },
+        {
+            id: 104,
+            request: {
+                value: 'linkedin',
+                search: 'EQUALS',
+                redirect: 'orkut.com'
+            }
+        }
+    ]
+}, {
+    id: 16474574282016,
+    name: 'project 2',
+    description: 'mfe stage environment',
+    active: false,
+    conditions: [
+        {
+            id: 101,
+            request: {
+                value: 'google.com',
+                search: 'EQUALS',
+                redirect: 'something.com'
+            }
+        },
+        {
+            id: 102,
+            request: {
+                value: 'facebook.com',
+                search: 'EQUALS',
+                redirect: 'ban.com'
+            }
+        },
+        {
+            id: 104,
+            request: {
+                value: 'linkedin',
+                search: 'EQUALS',
+                redirect: 'orkut.com'
+            }
+        },
+        {
+            id: 107,
+            request: {
+                value: 'site',
+                search: 'EQUALS',
+                redirect: 'site.com'
+            }
+        },
+        {
+            id: 108,
+            request: {
+                value: 'something',
+                search: 'EQUALS',
+                redirect: 'somesite.com'
+            }
+        }
+    ]
+}];
+
+//Valor default do contexto
+const INITIAL_RULES_STATE = [...rulesMock];
