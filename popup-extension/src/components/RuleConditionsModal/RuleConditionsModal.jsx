@@ -1,13 +1,7 @@
-import React from 'react';
 import Box from '@mui/material/Box';
-// import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import React from 'react';
 import RuleConditionsTable from '../RuleConditionsTable/RuleConditionsTable';
-// import Condition from '../Condition/Condition';
-import Button from '../styled-mui-components/CustomButton/Button';
-import styles from './RuleConditionsModal.module.css';
-// import { IconButton } from '@mui/material';
-// import CloseIcon from '@mui/icons-material/Close';
 
 const style = {
     position: 'absolute',
@@ -22,10 +16,7 @@ const style = {
     p: 4,
 };
 
-
-
-
-export default function RuleConditionModal({ rule, updateRuleConditions }) {
+export default function RuleConditionsModal({ rule, updateRuleConditions }) {
 
     const [open, setOpen] = React.useState(true);
 

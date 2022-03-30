@@ -64,6 +64,10 @@ const Condition = ({ condition, isEditMode, onChange, removed }) => {
 
     const handleCheckRegexButtonClick = () => {
 
+        if (!tempCondition.request.value) {
+            return;
+        }
+
         isRegexSupported(tempCondition.request.value).then(isSupported => {
             if (isSupported) {
                 setRegexTestResult('Your pattern is valid ✔')
@@ -114,6 +118,7 @@ const Condition = ({ condition, isEditMode, onChange, removed }) => {
                         variant="outlined"
                         size="small"
                         value={tempCondition.request.redirect}
+                        label={tempCondition.request.search === 'REGEX' ? 'RegEx' : ''}
                         onChange={(event) => handleSearchRedirectChange(event)}
                     />
                 </div>

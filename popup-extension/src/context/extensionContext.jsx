@@ -101,17 +101,17 @@ const ExtensionContextProvider = ({ children }) => {
 
 
     //https://sunnyzhou-1024.github.io/chrome-extension-docs/extensions/declarativeNetRequest.html#method-updateDynamicRules
-    const [rules, setRules] = useState([]);
-    // const [rules, setRules] = useState(INITIAL_RULES_STATE);
+    // const [rules, setRules] = useState([]);
+    const [rules, setRules] = useState(INITIAL_RULES_STATE);
 
-    React.useEffect(() => {
-        console.log('Extension Context Provider did mount!')
-        getRulesSyncData().then(rules => {
-            console.log('chegou')
-            console.log('rules', rules)
-            setRules(rules);
-        });
-    }, []);
+    // React.useEffect(() => {
+    //     console.log('Extension Context Provider did mount!')
+    //     getRulesSyncData().then(rules => {
+    //         console.log('chegou')
+    //         console.log('rules', rules)
+    //         setRules(rules);
+    //     });
+    // }, []);
 
     // const rule = {
     //     id: new Date().getTime(),

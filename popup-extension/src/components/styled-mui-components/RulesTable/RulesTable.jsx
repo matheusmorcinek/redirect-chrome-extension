@@ -3,7 +3,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { IconButton, Paper, Switch, Table, TableBody, TableCell, TableHead, TablePagination, TableRow } from '@mui/material';
 import React, { useContext } from 'react';
 import ExtensionContext from '../../../context/extensionContext';
-import useRuleConditionModal from '../../../hooks/useRuleConditionModal';
+import useRuleConditionsModal from '../../../hooks/useRuleConditionsModal';
 import RedirectType from '../../RedirectType/RedirectType';
 import Button from '../CustomButton/Button';
 import ExpandableTableRow from './ExpandableTableRow/ExpandableTableRow';
@@ -24,7 +24,7 @@ const RulesTable = ({ rules }) => {
 
     const { updateRuleStatus, removeRule } = useContext(ExtensionContext)
 
-    const { openRuleConditionModal } = useRuleConditionModal();
+    const { openRuleConditionsModal } = useRuleConditionsModal();
 
     const classes = useStyles();
 
@@ -86,7 +86,7 @@ const RulesTable = ({ rules }) => {
                                         <Switch checked={rule.active} onChange={() => onChangeRuleStatus(rule.id)} disabled={rule.conditions.length === 0} />
                                     </TableCell>
                                     <TableCell align="right">
-                                        <Button variant="contained" size="small" onClick={() => openRuleConditionModal(rule)}>{rule.conditions.length > 0 ? 'Edit Conditions' : 'Add Condition'}</Button>
+                                        <Button variant="contained" size="small" onClick={() => openRuleConditionsModal(rule)}>{rule.conditions.length > 0 ? 'Edit Conditions' : 'Add Condition'}</Button>
                                         <IconButton onClick={() => onRemoveRule(rule.id)} color="primary" aria-label="upload picture" component="span">
                                             <DeleteIcon color='action' />
                                         </IconButton>

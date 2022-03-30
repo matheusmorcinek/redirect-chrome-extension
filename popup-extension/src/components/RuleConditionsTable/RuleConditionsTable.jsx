@@ -1,14 +1,12 @@
-import React from "react";
 import { makeStyles } from '@material-ui/styles';
-import { Paper, Input, TableRow, TableHead, TableCell, TableBody, Table, TablePagination, IconButton } from '@mui/material';
-import DoneIcon from '@mui/icons-material/Done';
-import UndoIcon from '@mui/icons-material/Undo';
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import UndoIcon from '@mui/icons-material/Undo';
+import { IconButton, Paper, Table, TableBody, TableCell, TablePagination, TableRow } from '@mui/material';
+import React from "react";
 import Condition from "../Condition/Condition";
 import Button from '../styled-mui-components/CustomButton/Button';
 import styles from './RuleConditionsTable.module.css';
-
 
 const useStyles = makeStyles({
     root: {
@@ -72,7 +70,7 @@ const RuleConditionsTable = ({ rule, updateRuleConditions, onSaveConditions }) =
 
     const onChange = (updatedCondition) => {
 
-        const tempConditions = updatedConditions.filter(condition => condition.id != updatedCondition.id);
+        const tempConditions = updatedConditions.filter(condition => condition.id !== updatedCondition.id);
         tempConditions.push(updatedCondition);
         setUpdatedConditions(tempConditions);
     };
@@ -86,7 +84,7 @@ const RuleConditionsTable = ({ rule, updateRuleConditions, onSaveConditions }) =
         const row = rows.filter(row => row.condition.id === id)[0];
         setToRemoveConditions([...toRemoveConditions, row.condition]);
 
-        const tempConditions = updatedConditions.filter(condition => condition.id != id);
+        const tempConditions = updatedConditions.filter(condition => condition.id !== id);
         setUpdatedConditions(tempConditions);
 
         setEditCount(editCount + 1);
@@ -104,11 +102,11 @@ const RuleConditionsTable = ({ rule, updateRuleConditions, onSaveConditions }) =
 
         const row = rows.filter(row => row.condition.id === id)[0];
 
-        const tempConditions = updatedConditions.filter(condition => condition.id != id);
+        const tempConditions = updatedConditions.filter(condition => condition.id !== id);
         setUpdatedConditions(tempConditions);
 
         if (row.condition.request.value === '' && row.condition.request.redirect === '') {
-            const updatedRows = rows.filter(row => row.condition.id != id);
+            const updatedRows = rows.filter(row => row.condition.id !== id);
             setRows(updatedRows);
 
             return;
@@ -143,6 +141,8 @@ const RuleConditionsTable = ({ rule, updateRuleConditions, onSaveConditions }) =
         setEditCount(editCount + 1);
         setUpdatedConditions([...updatedConditions, newCondition]);
         setRows([...rows, createData(newCondition, true)]);
+
+        handleChangePage(null, Math.floor(rows.length / rowsPerPage));
     }
 
     return (

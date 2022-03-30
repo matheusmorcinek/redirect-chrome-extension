@@ -1,16 +1,16 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import RuleConditionModal from '../components/RuleConditionsModal/RuleConditionsModal';
+import RuleConditionsModal from '../components/RuleConditionsModal/RuleConditionsModal';
 import ExtensionContext from '../context/extensionContext';
 
-const useRuleConditionModal = () => {
+const useRuleConditionsModal = () => {
 
     const { updateRuleConditions } = React.useContext(ExtensionContext);
 
-    const openRuleConditionModal = (rule) => {
+    const openRuleConditionsModal = (rule) => {
         ReactDOM.render(
             ReactDOM.createPortal(
-                <RuleConditionModal
+                <RuleConditionsModal
                     rule={rule}
                     updateRuleConditions={updateRuleConditions}
                 />,
@@ -19,7 +19,7 @@ const useRuleConditionModal = () => {
         );
     };
 
-    return { openRuleConditionModal };
+    return { openRuleConditionsModal };
 };
 
-export default useRuleConditionModal;
+export default useRuleConditionsModal;
