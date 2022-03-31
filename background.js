@@ -266,7 +266,7 @@ const pushNotification = (rules) => {
         {
             title: 'Redirect Request Chrome Extension',
             message: message,
-            iconUrl: 'images/icon32.png',
+            iconUrl: 'images/128.png',
             type: 'basic'
         }
     )
