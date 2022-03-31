@@ -47,8 +47,10 @@ const updateChromeDynamicRules = () => {
     removeAllDynamicRules().then(() => {
 
         chrome.storage.sync.get(["rules"], function (data) {
+
             const { rules } = data;
 
+            //TODO SOMENTE DAS ATIVAS
             prepareRuleNotifications(rules);
 
             const activeConditions = rules.reduce((activeConditions, rule) => {
@@ -144,7 +146,7 @@ const setDefaultIcon = () => {
 
         const timeoutIdentification = setTimeout(() => {
             chrome.action.setIcon({ path: "images/icon32.png" }, () => { console.log('changed to default icon!!!') });
-        }, 5000);
+        }, 10000);
 
         chrome.storage.sync.set({ "timeoutId": timeoutIdentification }, function () {
             console.log('saved new timeoutid')
@@ -152,41 +154,113 @@ const setDefaultIcon = () => {
     });
 }
 
+
 const onBeforeCallback = (details) => {
 
     console.log('[onBeforeCallback] details ', details)
 
-    chrome.storage.sync.get(["ruleUrlOccurrences"], function (items) {
+    chrome.storage.sync.get(["rules"], function (data) {
 
-        const { ruleUrlOccurrences } = items;
+        const { rules } = data;
 
-        const redirectUrl = details.redirectUrl.charAt(details.redirectUrl.length - 1) === '/' ?
-            details.redirectUrl.slice(0, details.redirectUrl.length - 1) :
-            details.redirectUrl;
+        const callbackDetailMatchRuleCondition = (condition) => {
 
-        if (ruleUrlOccurrences[redirectUrl]) {
+            switch (condition.request.search) {
+                case 'REGEX':
+
+                    const regexPattern = new RegExp(condition.request.value);
+                    return regexPattern.test(details.url)
+                case 'EQUALS':
+
+                    //TODO test url without last slash
+                    // const redirectUrl = details.redirectUrl.charAt(details.redirectUrl.length - 1) === '/' ?
+                    //     details.redirectUrl.slice(0, details.redirectUrl.length - 1) :
+                    //     details.redirectUrl;
+
+                    return condition.request.value === details.url;
+                case 'CONTAINS':
+
+                    return details.url.includes(condition.request.value);
+                default:
+                    return false;
+            }
+        };
+
+        const activatedRules = rules.filter(rule => rule.active && rule.conditions.some(condition => callbackDetailMatchRuleCondition(condition)));
+
+        if (activatedRules.length > 0) {
 
             chrome.action.setIcon({ path: "images/iconWorking.png" }, () => { console.log('changed icon!!!') });
             setDefaultIcon();
 
-            pushNotification(ruleUrlOccurrences[redirectUrl])
+            const rulesForNotification = activatedRules.filter(rule => rule.enableNotifications);
+            prepareNotifications(rulesForNotification)
         }
     });
+
+    // //OLD
+    // chrome.storage.sync.get(["ruleUrlOccurrences"], function (items) {
+
+    //     const { ruleUrlOccurrences } = items;
+
+    //     const redirectUrl = details.redirectUrl.charAt(details.redirectUrl.length - 1) === '/' ?
+    //         details.redirectUrl.slice(0, details.redirectUrl.length - 1) :
+    //         details.redirectUrl;
+
+    //     if (ruleUrlOccurrences[redirectUrl]) {
+
+    //         chrome.action.setIcon({ path: "images/iconWorking.png" }, () => { console.log('changed icon!!!') });
+    //         setDefaultIcon();
+
+    //         pushNotification(ruleUrlOccurrences[redirectUrl])
+    //     }
+    // });
 };
 
+const prepareNotifications = (rules) => {
+
+    chrome.storage.sync.get(["notificationTimeoutId"], function (items) {
+
+        const { notificationTimeoutId } = items;
+
+        console.log('[prepareNotifications] notificationTimeoutId', notificationTimeoutId)
+
+        if (notificationTimeoutId) {
+
+            clearTimeout(notificationTimeoutId);
+            chrome.storage.sync.set({ "notificationTimeoutId": null }, function () {
+                console.log('clearTimeout')
+            });
+        }
+
+        const timeoutIdentification = setTimeout(() => {
+
+            pushNotification(rules);
+        }, 5000);
+
+        chrome.storage.sync.set({ "notificationTimeoutId": timeoutIdentification }, function () {
+            console.log('saved new notificationTimeoutId')
+        });
+    });
+
+}
 
 const pushNotification = (rules) => {
 
-    const organizeRulesText = () => rules.reduce((msg, rule, index) => {
+    if (rules.length === 0) {
+        return;
+    }
+
+    const rulesNameList = () => rules.reduce((msg, rule, index) => {
         if (index === 0) {
-            return rule
+            return rule.name
         }
-        return `${msg}, ${rule}`
+        return `${msg}, ${rule.name}`
     }, '');
 
-    const message = `${rules.length > 0 ?
-        `Redirection working for the following active rules: ${organizeRulesText()}` :
-        `Redirection working for rule ${rules[0]}`}`
+    const message = rules.length > 1 ?
+        `Redirection working for the following active rules: ${rulesNameList()}` :
+        `Redirection working for rule ${rules[0].name}`;
 
     chrome.notifications.create(
         {
@@ -202,6 +276,8 @@ const removeRuleNotificationListeners = () => {
     chrome.webRequest.onBeforeRedirect.removeListener(onBeforeCallback)
 }
 
+
+//TODO renomear para um nome que faça sentido
 const prepareRuleNotifications = (rules) => {
 
     console.log(' ')
@@ -213,37 +289,37 @@ const prepareRuleNotifications = (rules) => {
 
     removeRuleNotificationListeners();
 
-    chrome.storage.sync.set({ "ruleUrlOccurrences": null });
+    // chrome.storage.sync.set({ "ruleUrlOccurrences": null });
 
-    const ruleUrlOccurrences = rules.reduce((urls, rule) => {
+    // const ruleUrlOccurrences = rules.reduce((urls, rule) => {
 
-        if (rule.enableNotifications) {
+    //     if (rule.active) {
 
-            rule.conditions.forEach(condition => {
+    //         rule.conditions.forEach(condition => {
 
-                if (!condition.request.redirect) {
-                    return;
-                }
+    //             if (!condition.request.redirect) {
+    //                 return;
+    //             }
 
-                const url = condition.request.redirect.charAt(condition.request.redirect.length - 1) === '/' ?
-                    condition.request.redirect.slice(0, condition.request.redirect.length - 1) :
-                    condition.request.redirect;
+    //             const url = condition.request.redirect.charAt(condition.request.redirect.length - 1) === '/' ?
+    //                 condition.request.redirect.slice(0, condition.request.redirect.length - 1) :
+    //                 condition.request.redirect;
 
-                if (urls[url]) {
+    //             if (urls[url]) {
 
-                    urls[url].push(rule.name);
-                    return;
-                }
-                urls[url] = [rule.name];
-            });
-        }
+    //                 urls[url].push(rule.name);
+    //                 return;
+    //             }
+    //             urls[url] = [rule.name];
+    //         });
+    //     }
 
-        return urls;
-    }, {});
+    //     return urls;
+    // }, {});
 
-    console.log('[prepareRuleNotifications] ruleUrlOccurrences', ruleUrlOccurrences)
+    // console.log('[prepareRuleNotifications] ruleUrlOccurrences', ruleUrlOccurrences)
 
-    chrome.storage.sync.set({ "ruleUrlOccurrences": ruleUrlOccurrences });
+    // chrome.storage.sync.set({ "ruleUrlOccurrences": ruleUrlOccurrences });
 
     //https://developer.chrome.com/docs/extensions/mv3/match_patterns/
     const networkFilters = {

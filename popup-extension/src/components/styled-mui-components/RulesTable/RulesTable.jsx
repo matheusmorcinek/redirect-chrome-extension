@@ -22,7 +22,7 @@ const useStyles = makeStyles({
 
 const RulesTable = ({ rules }) => {
 
-    const { updateRuleStatus, removeRule } = useContext(ExtensionContext)
+    const { updateRuleStatus, removeRule, updateRuleNotifications } = useContext(ExtensionContext)
 
     const { openRuleConditionsModal } = useRuleConditionsModal();
 
@@ -41,8 +41,11 @@ const RulesTable = ({ rules }) => {
     };
 
     const onChangeRuleStatus = (ruleId) => {
-        console.log('onChangeRuleStatus');
         updateRuleStatus(ruleId)
+    }
+
+    const onChangeRuleNotifications = (ruleId) => {
+        updateRuleNotifications(ruleId)
     }
 
     const onRemoveRule = (ruleId) => {
@@ -85,11 +88,17 @@ const RulesTable = ({ rules }) => {
                                     <TableCell align="right">
                                         <Switch checked={rule.active} onChange={() => onChangeRuleStatus(rule.id)} disabled={rule.conditions.length === 0} />
                                     </TableCell>
-                                    <TableCell align="right">
-                                        <Button variant="contained" size="small" onClick={() => openRuleConditionsModal(rule)}>{rule.conditions.length > 0 ? 'Edit Conditions' : 'Add Condition'}</Button>
-                                        <IconButton onClick={() => onRemoveRule(rule.id)} color="primary" aria-label="upload picture" component="span">
-                                            <DeleteIcon color='action' />
-                                        </IconButton>
+                                    <TableCell align="right" className={styles['rule-actions-cell']}>
+                                        <div className={styles['rule-actions-cell-container']}>
+                                            <Button variant="contained" size="small" onClick={() => openRuleConditionsModal(rule)}>{rule.conditions.length > 0 ? 'Edit Conditions' : 'Add Condition'}</Button>
+                                            <div className={styles['rule-actions-cell-switch-notifications-container']}>
+                                                <Switch size="small" checked={rule.enableNotifications} onChange={() => onChangeRuleNotifications(rule.id)} disabled={rule.conditions.length === 0} />
+                                                <span>Notifications</span>
+                                            </div>
+                                            <IconButton onClick={() => onRemoveRule(rule.id)} color="primary" aria-label="upload picture" component="span">
+                                                <DeleteIcon color='action' />
+                                            </IconButton>
+                                        </div>
                                     </TableCell>
                                 </ExpandableTableRow>
                             ))}

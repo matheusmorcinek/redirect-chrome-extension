@@ -84,6 +84,25 @@ const ExtensionContextProvider = ({ children }) => {
         updateChromeStorageRules(updatedRules);
     }
 
+    const updateRuleNotifications = (ruleId) => {
+
+        const updatedRules = rules.map(rule => {
+            if (rule.id === ruleId) {
+
+                const updatedRule = {
+                    ...rule,
+                    enableNotifications: !rule.enableNotifications,
+                }
+
+                return updatedRule;
+            }
+            return rule;
+        });
+
+        setRules(updatedRules.sort((a, b) => (a.id > b.id) ? 1 : -1));
+        updateChromeStorageRules(updatedRules);
+    }
+
     const removeRule = (ruleId) => {
 
         const updatedRules = rules.filter(rule => rule.id !== ruleId);
@@ -99,7 +118,8 @@ const ExtensionContextProvider = ({ children }) => {
                 addRule,
                 updateRuleConditions,
                 updateRuleStatus,
-                removeRule
+                removeRule,
+                updateRuleNotifications
             }}
         >
             {children}

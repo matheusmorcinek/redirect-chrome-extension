@@ -64,25 +64,27 @@ const RuleModal = ({ addRule }) => {
                                 </Button>
                             </div>
                         </div>
-                        <div>
-                            <span>Rule Name:</span>
-                            <TextField
-                                color="primary"
-                                variant="outlined"
-                                size="small"
-                                value={ruleName}
-                                onChange={handleRuleNameTextChange}
-                            />
-                        </div>
-                        <div>
-                            <span>Description:</span>
-                            <TextField
-                                color="primary"
-                                variant="outlined"
-                                size="small"
-                                value={ruleDescription}
-                                onChange={handleRuleDescriptionTextChange}
-                            />
+                        <div className={styles['modal-inner-container']}>
+                            <div>
+                                <span>Rule Name:</span>
+                                <TextField
+                                    color="primary"
+                                    variant="outlined"
+                                    size="small"
+                                    value={ruleName}
+                                    onChange={handleRuleNameTextChange}
+                                />
+                            </div>
+                            <div>
+                                <span>Description:</span>
+                                <TextField
+                                    color="primary"
+                                    variant="outlined"
+                                    size="small"
+                                    value={ruleDescription}
+                                    onChange={handleRuleDescriptionTextChange}
+                                />
+                            </div>
                         </div>
                         <div className={styles['modal-header-container-close-button']}>
                             <IconButton color="primary" size="small" aria-label="upload picture" component="span">
