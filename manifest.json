@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
-  "name": "Redirect Network Chrome Extension",
-  "description": "A free extension to intercept and redirect URLs",
+  "name": "Redirect Helper",
+  "description": "The best way to intercept HTTP requests and redirect URLs",
   "version": "0.001",
   "content_scripts": [{ "matches": ["<all_urls>"], "js": ["content.js"] }],
   "action": {
@@ -28,13 +28,3 @@
     "notifications"
   ]
 }
-
-// "declarative_net_request": {
-//   "rule_resources": [
-//     {
-//       "id": "ruleset_1",
-//       "enabled": true,
-//       "path": "rules.json"
-//     }
-//   ]
-// },
